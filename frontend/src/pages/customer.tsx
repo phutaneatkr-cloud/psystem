@@ -135,48 +135,31 @@ function CustomerForm (props: any) {
         setIsPassword(false)
     }
 
-    return <Modal title={props.id > 0 ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูลใหม่'} lg
+    return <Modal sm title={props.id > 0 ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูลใหม่'}
                   open={props.id !== null} onClose={props.onClose}
                   onOpenEnd={() => loadData()} onCloseEnd={() => onClose()}
                   footer={props.id > 0 && <Button className={'ml-3'} outline={!isPassword} secondary onClick={() => setIsPassword((prev) => !prev)}>ตั้งรหัสผ่าน</Button>}
                   footerDrop={props.id > 0 && deleteData}
                   footerSave={saveData}>
 
-        {data && <div className={'flex space-x-2'}>
+        {data && <>
 
-            <FormContainer title={'ข้อมูลส่วนตัว'} className={'w-1/2'} collapse={'info'}>
+            <Input label="ชื่อ" value={data.name} onChange={name => onChange({ name })}/>
 
-                <div className={'flex mt-2 space-x-2'}>
-                    <Input label="ชื่อ" className={'w-1/2'} value={data.name} onChange={name => onChange({ name })}/>
-                    <Input label="สกุล" className={'w-1/2'} value={data.lastname} onChange={lastname => onChange({ lastname })}/>
-                </div>
+            <Input label="สกุล" className={'mt-2'} value={data.lastname} onChange={lastname => onChange({ lastname })}/>
 
-                <div className={'flex space-x-2'}>
-                    <Radio label={'เพศ'} className={'w-1/2'} value={data.gender} options={GENDERs} onChange={gender => onChange({ gender })}/>
-                    <InputDate label="วัน/เดือน/ปีเกิด" className={'w-1/2'} value={data.birthday} onChange={birthday => onChange({ birthday })}/>
-                </div>
+            <Radio label={'เพศ'} value={data.gender} options={GENDERs} onChange={gender => onChange({ gender })}/>
 
-                <div className={'flex space-x-2 mt-3'}>
-                    <Input label="เบอร์โทร" className={'w-1/2'} value={data.tel} onChange={tel => onChange({ tel })}/>
-                    <Input label="ไลน์" className={'w-1/2'} value={data.line} onChange={line => onChange({ line })}/>
-                </div>
+            <InputDate label="วัน/เดือน/ปีเกิด" className={'mt-3'} value={data.birthday} onChange={birthday => onChange({ birthday })}/>
 
-                <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
-                <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/>
-            </FormContainer>
 
-            <FormContainer title={'ข้อมูลเข้าสู่ระบบ'} className={'w-1/2'} collapse={'login'}>
-                <Input label="ชื่อผู้ใช้งาน"
-                       className={'mt-1'}
-                       value={data.username}
-                       onChange={username => onChange({ username })}/>
-                <div className={'flex space-x-2 mt-3'}>
-                    <Input label="รหัสผ่าน" className={'w-1/2'} type={'password'} value={data.password} onChange={password => onChange({ password })}/>
-                    <Input label="ยืนยันรหัสผ่าน" className={'w-1/2'} type={'password'} value={data.cpassword} onChange={cpassword => onChange({ cpassword })}/>
-                </div>
-                <span className={'text-xs text-red-500'}>กรอกรหัสผ่านเพื่อแก้ไข</span>
-            </FormContainer>
-        </div>}
+            <div className={'flex space-x-2 mt-3'}>
+                <Input label="เบอร์โทร" className={'w-1/2'} value={data.tel} onChange={tel => onChange({ tel })}/>
+                <Input label="ไลน์" className={'w-1/2'} value={data.line} onChange={line => onChange({ line })}/>
+            </div>
+
+            <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
+            <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/></>}
     </Modal>
 
 }

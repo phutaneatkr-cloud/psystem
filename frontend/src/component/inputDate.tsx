@@ -1,80 +1,101 @@
-import { useMemo, useRef, useState } from 'react'
-import { clsNames } from '../utlis'
+import React, { useState } from 'react'
 
-import Flatpickr from 'react-flatpickr'
-import 'flatpickr/dist/themes/material_blue.css' // สามารถเปลี่ยนธีมได้ตามต้องการ
-import 'flatpickr/dist/l10n/th.js' // นำเข้าภาษาไทย
+import DatePicker, { registerLocale } from 'react-datepicker'
+import { format, getYear } from "date-fns";
+import 'react-datepicker/dist/react-datepicker.css'
+
+import { th } from 'date-fns/locale/th';
+registerLocale('th', th)
+
+import { Icon } from './icon'
+import { clsNames } from '../utlis'
 
 interface InputDateProps {
     label?: string;
     value?: string | number;
-    defValue?: string | number;
     className?: string;
-    type?: 'text' | 'number' | 'password';
+    placeholder?: string;
     form?: boolean;
     time?: boolean,
     noClear?: boolean;
     onChange: (value: Date, e?: KeyboardEvent) => void;
+    onBlur?: (value: string, e?: KeyboardEvent) => void;
 }
 
 export const InputDate = (props: InputDateProps) => {
-    const datePickerRef: any = useRef(null)
 
-    const handleClear = () => {
-        if (datePickerRef.current) {
-            datePickerRef.current.flatpickr.clear() // ใช้ clear() ของ Flatpickr เพื่อเคลียร์วันที่
-        }
+    const [isFocused, setIsFocused] = useState(false)
+    const [selectedDate, setSelectedDate] = useState<Date | null>(
+        props.value ? new Date(props.value) : null
+    )
+
+    const handleChange = (date: Date | null, e?: any) => {
+        setSelectedDate(date)
+        if (date) props.onChange(date, e)
     }
 
-    const vValue = useMemo(() => {
-        return typeof props.value === 'string' ? new Date(props.value) : props.value
-    }, [props.value])
+    const handleClear = () => {
+        setSelectedDate(null)
+        props.onChange(new Date(''), undefined)
+    }
 
-    return <div className={clsNames('mt-3 relative flex-1', props.className)}>
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        if (!e.target.value) setIsFocused(false)
+    }
 
-        <label
-            className={clsNames(
-                'absolute left-2 top-2 bg-white  text-gray-500 transition-all duration-300',
-                props.value ? '-translate-y-4 text-xs' : 'text-sm',
-                'pointer-events-none'
-            )}>
-            {props.label}
-        </label>
+    const handleFocus = () => setIsFocused(true)
 
-        <Flatpickr
-            ref={datePickerRef}
-            //placeholder={props.label}
-            className={clsNames(
-                props.className,
-                'border border-gray-300 text-sm rounded p-2 w-full focus:outline-blue-500'
-            )}
-            value={vValue} // ค่าที่เลือก
-            onChange={(values) => {
-                props.onChange(values[0])
-            }} // อัปเดตค่าที่เลือก
-            options={{
-                locale: 'th', // ตั้งค่าภาษาไทย
-                //mode: "range",
-                //animate: true,
-                time_24hr: true,
-                enableTime: props.time,
-                //inline: true,
-                //defaultDate: new Date(),
-                //wrap: true,
-                //allowInput: true,
-                dateFormat: props.time ? 'd/m/Y H:i' : 'd/m/Y',
-                disableMobile: true,
-                onReady: (selectedDates, dateStr, instance) => {
-                    const clearButton = instance.element.nextElementSibling // ค้นหาปุ่ม clear
-                    /*clearButton.addEventListener("click", () => {
-                    instance.clear(); // เรียกใช้ฟังก์ชัน clear ของ Flatpickr
-                  });*/
-                },
-            }}
-        />
-        {!props.noClear && vValue && <button type="button" onClick={handleClear} className="flatpickr-clear-button" title="ลบ">
-            &#10005;
-        </button>}
-    </div>
+    return <div className={clsNames('relative w-full', props.className)}>
+            <label
+                className={clsNames(
+                    isFocused || selectedDate ? '-translate-y-4 text-xs' : 'text-sm',
+                    'absolute left-2 top-2 bg-white text-gray-500 transition-all duration-300',
+                    'pointer-events-none z-10' // ← เพิ่ม z-index
+                )}
+                style={{ width: 'fit-content' }}>
+                {props.label}
+            </label>
+
+            <DatePicker
+                wrapperClassName="w-full"
+                className="w-full"
+                selected={selectedDate}
+                onChange={handleChange}
+                onCalendarOpen={() => setIsFocused(true)}
+                onCalendarClose={() => setIsFocused(false)}
+                showTimeSelect={props.time}
+                dateFormat={props.time ? 'dd/MM/yyyy HH:mm' : 'dd/MM/yyyy'}
+                placeholderText={props.placeholder}
+                locale={'th'}
+                customInput={
+                    <input
+                        readOnly
+                        placeholder={props.placeholder || undefined}
+                        value={
+                            selectedDate
+                                ? selectedDate.toLocaleDateString('th-TH', {
+                                    year: 'numeric',
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                })
+                                : ''
+                        }
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        className={clsNames(
+                            'border border-gray-300 text-sm rounded p-2 w-full pr-8',
+                            'focus:outline-blue-500 cursor-pointer'
+                        )}
+                    />
+                }
+            />
+
+
+            {!props.noClear && selectedDate && <Icon name="x" className={clsNames(
+                'absolute right-2 top-1/2 -translate-y-1/2',
+                'cursor-pointer text-gray-400 hover:text-gray-600'
+            )} onClick={handleClear}
+            />}
+        </div>
 
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { clsNames, isEmpty } from '../utlis'
+import { Icon } from './icon'
 
 interface SelectProps {
     label?: string;
@@ -105,10 +106,6 @@ export const Select = (props: SelectProps) => {
         }
     }, [])
 
-    //console.log('search -> ', search)
-    //console.log('vId -> ', vId)
-    //console.log('vName -> ', vName)
-
     return <div className={clsNames('relative w-full bg-amber-300', props.className)}>
 
         {props.multiple ? <div ref={selectRef} className={clsNames(
@@ -168,21 +165,6 @@ export const Select = (props: SelectProps) => {
                 <i className="border-l-2 px-2 fa-solid  fa-chevron-down text-sm text-gray-400"/>
             </button>
 
-            {/* {onOpen && <div className={clsNames(
-                'absolute z-10 bg-white rounded max-h-52 overflow-y-auto scrollable-div',
-                options.length > 0 && 'border')} style={{ marginTop: '2px' }}>
-                {options.map((d, i: number) => (
-                    <div key={'item_' + i}
-                         className={clsNames(
-                             'text-sm p-2 cursor-pointer hover:bg-blue-100',
-                             vId && vId === d.id && 'bg-blue-200'
-                         )}
-                         onClick={() => onChange(d.id)}>
-                        {d.name}
-                    </div>
-                ))}
-            </div>}*/}
-
         </div> : <div ref={selectRef} className={clsNames(
             'flex h-fit',
             'border border-gray-300 rounded',
@@ -205,18 +187,11 @@ export const Select = (props: SelectProps) => {
                 onFocus={() => setOnFocus(true)}
                 onBlur={onBlur}
                 onClick={() => setOnOpen((prev: any) => !prev)}
-                className={clsNames(
-                    'text-ellipsis text-sm w-full p-2 rounded border-none outline-none focus:ring-0 pr-1',
-                )}
+                className={clsNames('text-ellipsis text-sm w-full p-2 rounded border-none outline-none focus:ring-0 pr-1')}
             />
 
-            {props.value && <button onClick={() => onClear()}>
-                <i className="px-2 fa-solid fa-close text-sm text-gray-400 hover:text-red-400"/>
-            </button>}
-
-            <button onClick={() => setOnOpen((prev: any) => !prev)}>
-                <i className="border-l-2 px-2 fa-solid  fa-chevron-down text-sm text-gray-400"/>
-            </button>
+            {props.value ? <Icon name={'x'} className={'mr-1 text-gray-400 hover:text-red-400'} onClick={() => onClear()}/> :
+                <Icon name={'chevron-down'} className={'mr-1 text-gray-400'} onClick={() => setOnOpen((prev: any) => !prev)}/>}
 
         </div>}
 
@@ -228,10 +203,7 @@ export const Select = (props: SelectProps) => {
         )} style={{ marginTop: '0' }}>
             {options.map((d, i: number) => (
                 <div key={'item_' + i}
-                     className={clsNames(
-                         'text-sm p-2 cursor-pointer hover:bg-blue-100',
-                         vId && vId === d.id && 'bg-blue-200'
-                     )}
+                     className={clsNames('text-sm p-2 cursor-pointer hover:bg-blue-100', vId && vId === d.id && 'bg-blue-200')}
                      onClick={() => onChange(d.id)}>
                     {d.name}
                 </div>

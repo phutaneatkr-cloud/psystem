@@ -18,7 +18,13 @@ interface I_IconProps {
 }
 
 export function Icon (props: I_IconProps) {
-    const IconComponent = (TablerIcons as any)['Icon' + props.name.charAt(0).toUpperCase() + props.name.slice(1)]
+
+    const pascalName = props.name
+        .split('-')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join('');
+
+    const IconComponent = (TablerIcons as any)['Icon' + pascalName];
 
     if (!IconComponent)
         return <IconQuestionMark size={14} className={'text-red-500'}/>

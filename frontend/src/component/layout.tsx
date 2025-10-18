@@ -4,12 +4,9 @@ import { clsNames } from '../utlis'
 import { useDispatch } from 'react-redux'
 import { clearUser, useUser } from '../service/state'
 import { tokenService } from '../service/service'
+import { MENU_SLIDER } from '../variable/menu'
 
-const MENU_SLIDER = [
-    { name: 'หน้าหลัก', path: '/home' },
-    { name: 'ผู้ใช้งาน', path: '/user', role: 'admin' },
-    { name: 'ทดลอง', path: '/dev', role: 'admin' },
-]
+
 
 export default function MainLayout (props: any) {
     const user = useUser()
