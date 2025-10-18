@@ -1,0 +1,19 @@
+@import "./style/common.css";
+
+@import "./style/form.scss";
+@import "./style/input.scss";
+@import "./style/select.scss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+div {
+    user-select: text;
+    outline: none;
+    caret-color: transparent;
+}
+
+input {
+    caret-color: #333333;
+}

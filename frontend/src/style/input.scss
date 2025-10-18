@@ -1,0 +1,5 @@
+.-input {
+    & + .-input {
+        @apply mt-2;
+    }
+}
