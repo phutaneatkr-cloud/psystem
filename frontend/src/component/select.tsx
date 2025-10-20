@@ -12,7 +12,7 @@ interface SelectProps {
     noClear?: boolean;
     note?: string;
     options: any[],
-    onChange: (value: any, e?: KeyboardEvent) => void;
+    onChange: (value: any, values?: any[]) => void;
 }
 
 export const Select = (props: SelectProps) => {
@@ -24,10 +24,6 @@ export const Select = (props: SelectProps) => {
 
     const dropdownRef: any = useRef(null)
     const selectRef: any = useRef(null)
-
-    const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        if (!e.target.value) setOnFocus(false)
-    }
 
     const onClear = () => {
         props.onChange(props.multiple ? [] : null)
@@ -74,8 +70,12 @@ export const Select = (props: SelectProps) => {
         return output
     }, [props.value, search])
 
-    const valueIds: any = useMemo(() => {
-        return props.multiple ? (props.value || []).map((d: any) => d.id || d) : []
+    const { valueIds, valueNames }: any = useMemo(() => {
+        const valueIds = props.multiple ? (props.value || []).map((d: any) => d.id || d) : []
+        return {
+            valueIds,
+            valueNames: [],
+        }
     }, [props.value])
 
     const options = useMemo(() => {
@@ -106,7 +106,65 @@ export const Select = (props: SelectProps) => {
         }
     }, [])
 
-    return <div className={clsNames('relative w-full bg-amber-300', props.className)}>
+    console.log('valueIds -> ', valueIds)
+
+    return <div className={clsNames('relative', props.className)}>
+
+        <div ref={selectRef} className={clsNames(
+            'border border-gray-300 rounded',
+            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500',
+            props.className
+        )}>
+
+            <label
+                className={clsNames(
+                    onFocus || (!props.multiple ? (props.value) : selected.length > 0) ? '-translate-y-4 text-xs' : 'text-sm',
+                    'absolute left-2 top-2 bg-white  text-gray-500 transition-all duration-300',
+                    'pointer-events-none',
+                )}>
+                {props.label}
+            </label>
+
+            <input
+                value={vName}
+                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => setOnFocus(true)}
+                onClick={() => setOnOpen((prev: any) => !prev)}
+                className={clsNames('text-ellipsis text-sm w-full p-2 rounded border-none outline-none focus:ring-0 pr-1')}
+            />
+
+            {!props.noClear && vName && !onFocus && <Icon name="x" className={clsNames(
+                'absolute right-2 top-1/2 -translate-y-1/2',
+                'cursor-pointer text-gray-400 hover:text-gray-600'
+            )} onClick={() => onClear()}
+            />}
+
+            {!isEmpty(vName) && !onFocus && <Icon name="chevron-down" className={clsNames(
+                'absolute right-2 top-1/2 -translate-y-1/2',
+                'cursor-pointer text-gray-400 hover:text-gray-600'
+            )} onClick={() => onClear()}
+            />}
+        </div>
+
+        {onOpen && <div ref={dropdownRef} className={clsNames(
+            'flex flex-col max-h-56 overflow-y-scroll scrollable-div',
+            'border border-gray-300 rounded',
+            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500',
+            props.className
+        )}>
+            {options.map((d, i: number) => (
+                <div key={'item_' + i}
+                     className={clsNames('text-sm p-2 cursor-pointer hover:bg-blue-100', vId && vId === d.id && 'bg-blue-200')}
+                     onClick={() => onChange(d.id)}>
+                    {d.name}
+                </div>
+            ))}
+        </div>}
+
+    </div>
+}
+
+/*
 
         {props.multiple ? <div ref={selectRef} className={clsNames(
             'flex h-fit',
@@ -165,50 +223,5 @@ export const Select = (props: SelectProps) => {
                 <i className="border-l-2 px-2 fa-solid  fa-chevron-down text-sm text-gray-400"/>
             </button>
 
-        </div> : <div ref={selectRef} className={clsNames(
-            'flex h-fit',
-            'border border-gray-300 rounded',
-            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500',
-            props.className
-        )} style={{ marginTop: '0' }}>
-
-            <label
-                className={clsNames(
-                    onFocus || (!props.multiple ? (props.value) : selected.length > 0) ? '-translate-y-4 text-xs' : 'text-sm',
-                    'absolute left-2 top-2 bg-white  text-gray-500 transition-all duration-300',
-                    'pointer-events-none',
-                )}>
-                {props.label}
-            </label>
-
-            <input
-                value={vName}
-                onChange={(e) => setSearch(e.target.value)}
-                onFocus={() => setOnFocus(true)}
-                onBlur={onBlur}
-                onClick={() => setOnOpen((prev: any) => !prev)}
-                className={clsNames('text-ellipsis text-sm w-full p-2 rounded border-none outline-none focus:ring-0 pr-1')}
-            />
-
-            {props.value ? <Icon name={'x'} className={'mr-1 text-gray-400 hover:text-red-400'} onClick={() => onClear()}/> :
-                <Icon name={'chevron-down'} className={'mr-1 text-gray-400'} onClick={() => setOnOpen((prev: any) => !prev)}/>}
-
-        </div>}
-
-        {onOpen && <div ref={dropdownRef} className={clsNames(
-            'flex flex-col max-h-56 overflow-y-scroll scrollable-div',
-            'border border-gray-300 rounded',
-            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500',
-            props.className
-        )} style={{ marginTop: '0' }}>
-            {options.map((d, i: number) => (
-                <div key={'item_' + i}
-                     className={clsNames('text-sm p-2 cursor-pointer hover:bg-blue-100', vId && vId === d.id && 'bg-blue-200')}
-                     onClick={() => onChange(d.id)}>
-                    {d.name}
-                </div>
-            ))}
-        </div>}
-
-    </div>
-}
+        </div> : }
+*/

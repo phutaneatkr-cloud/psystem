@@ -12,7 +12,7 @@ import { clsNames } from '../utlis'
 
 interface InputDateProps {
     label?: string;
-    value?: string | number;
+    value?: Date |string | number;
     className?: string;
     placeholder?: string;
     form?: boolean;
@@ -25,6 +25,7 @@ interface InputDateProps {
 export const InputDate = (props: InputDateProps) => {
 
     const [isFocused, setIsFocused] = useState(false)
+
     const [selectedDate, setSelectedDate] = useState<Date | null>(
         props.value ? new Date(props.value) : null
     )
@@ -45,7 +46,7 @@ export const InputDate = (props: InputDateProps) => {
 
     const handleFocus = () => setIsFocused(true)
 
-    return <div className={clsNames('relative w-full', props.className)}>
+    return <div className={clsNames('relative', props.className)}>
             <label
                 className={clsNames(
                     isFocused || selectedDate ? '-translate-y-4 text-xs' : 'text-sm',

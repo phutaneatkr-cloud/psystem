@@ -182,7 +182,7 @@ function UserForm (props: any) {
                 </div>
             )}
 
-            <InputDate label="วัน/เดือน/ปีเกิด" value={data.birthday} onChange={(birthday: any) => onChange({ birthday })}/>
+            <InputDate label="วัน/เดือน/ปีเกิด" className={'mt-3'} value={data.birthday} onChange={(birthday: any) => onChange({ birthday })}/>
         </>
         }
     </Modal>

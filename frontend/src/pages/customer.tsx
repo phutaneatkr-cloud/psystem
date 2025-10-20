@@ -152,14 +152,15 @@ function CustomerForm (props: any) {
 
             <InputDate label="วัน/เดือน/ปีเกิด" className={'mt-3'} value={data.birthday} onChange={birthday => onChange({ birthday })}/>
 
-
             <div className={'flex space-x-2 mt-3'}>
                 <Input label="เบอร์โทร" className={'w-1/2'} value={data.tel} onChange={tel => onChange({ tel })}/>
                 <Input label="ไลน์" className={'w-1/2'} value={data.line} onChange={line => onChange({ line })}/>
             </div>
 
             <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
-            <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/></>}
+            <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/>
+        </>
+        }
     </Modal>
 
 }

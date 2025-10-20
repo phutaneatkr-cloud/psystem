@@ -1,10 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Button } from '../component/button'
 import { FormContainer } from '../component/form'
 import { Icon } from '../component/icon'
+import { Select } from '../component/select'
+import { JOBs } from '../variable/customer'
+import { Input } from '../component/input'
+import { InputDate } from '../component/inputDate'
 
 export function DevPage () {
+
+    const [data, setData] = useState({
+        name: '',
+        detail: '',
+        date: new Date(),
+        job: null,
+        jobs:[]
+    })
+
+    const onChange = (update: any) => setData((prev: any) => ({ ...prev, ...update }))
 
     return <div>
 
@@ -23,6 +37,15 @@ export function DevPage () {
         <FormContainer className={'mt-3'}>
             <Icon size={20} button name={'123'}/>
         </FormContainer>
+
+        <FormContainer className={'mt-3'}>
+            <Input label={'input'} className={'w-64'} value={data.name} onChange={name => onChange({ name })}/>
+            <Input label={'input multiple'} className={'w-64 mt-2'} multiple value={data.detail} onChange={detail => onChange({ detail })}/>
+            <InputDate label={'input date'} className={'w-64 mt-2'} value={data.date} onChange={date => onChange({ date })}/>
+            <Select className={'w-64 mt-2'} label={'select'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
+            <Select className={'w-64 mt-2'} label={'selects'} multiple value={data.jobs} options={JOBs} onChange={jobs => onChange({ jobs })}/>
+        </FormContainer>
+
 
     </div>
 

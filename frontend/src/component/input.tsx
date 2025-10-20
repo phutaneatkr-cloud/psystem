@@ -56,6 +56,7 @@ export const Input = (props: InputProps) => {
         if (!e.target.value) setIsFocused(false)
         props.onBlur?.(e.target.value)
     }
+
     const handleBlurTextArea = (e: React.FocusEvent<HTMLTextAreaElement>) => {
         if (!e.target.value) setIsFocused(false)
         props.onBlur?.(e.target.value)
