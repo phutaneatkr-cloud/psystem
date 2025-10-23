@@ -39,11 +39,11 @@ export function DevPage () {
         </FormContainer>
 
         <FormContainer className={'mt-3'}>
-            <Input label={'input'} className={'w-64'} value={data.name} onChange={name => onChange({ name })}/>
-            <Input label={'input multiple'} className={'w-64 mt-2'} multiple value={data.detail} onChange={detail => onChange({ detail })}/>
-            <InputDate label={'input date'} className={'w-64 mt-2'} value={data.date} onChange={date => onChange({ date })}/>
-            <Select className={'w-64 mt-2'} label={'select'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
-            <Select className={'w-64 mt-2'} label={'selects'} multiple value={data.jobs} options={JOBs} onChange={jobs => onChange({ jobs })}/>
+            <Input label={'input'} className={'w-1/2'} value={data.name} onChange={name => onChange({ name })}/>
+            <Input label={'input multiple'} className={'w-1/2 mt-2'} multiple value={data.detail} onChange={detail => onChange({ detail })}/>
+            <InputDate label={'input date'} className={'w-1/2 mt-2'} value={data.date} onChange={date => onChange({ date })}/>
+            <Select className={'w-1/2 mt-2'} label={'select'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
+            <Select className={'w-1/2 mt-2'} label={'selects'} multiple value={data.jobs} options={JOBs} onChange={jobs => onChange({ jobs })}/>
         </FormContainer>
 
 

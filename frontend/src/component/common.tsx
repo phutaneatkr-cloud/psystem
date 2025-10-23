@@ -32,7 +32,7 @@ export const Wait = () => {
 }
 
 export const tSuccess = (title: string, subtitle?: string) => {
-    return MySwal.fire({
+    MySwal.fire({
         width: 400,
         title: title,
         text: subtitle,
@@ -42,7 +42,7 @@ export const tSuccess = (title: string, subtitle?: string) => {
 }
 
 export const tError = (title: string, subtitle?: string) => {
-    return MySwal.fire({
+    MySwal.fire({
         width: 400,
         title: title,
         text: subtitle,

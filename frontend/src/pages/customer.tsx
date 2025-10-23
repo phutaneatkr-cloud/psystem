@@ -40,7 +40,7 @@ export default function Customer (props: any) {
 
     return <>
         <PageTitle title="ลูกค้า">
-            <InputSearch value={search} onChange={setSearch}/>
+            <InputSearch value={search} onChange={setSearch} onRefresh={loadList}/>
             <Button success className="w-36 ml-3" onClick={() => setForm(0)}>
                 เพิ่มข้อมูลใหม่
             </Button>

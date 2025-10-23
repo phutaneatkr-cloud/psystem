@@ -1,12 +1,14 @@
+import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { clsNames } from '../utlis'
-import { useDispatch } from 'react-redux'
-import { clearUser, useUser } from '../service/state'
-import { tokenService } from '../service/service'
+import { clearUser, setUser, useUser } from '../service/state'
+import { loginCheck, tokenService } from '../service/service'
 import { MENU_SLIDER } from '../variable/menu'
-
-
+import { Icon } from './icon'
+import React, { useState } from 'react'
+import { UserForm } from '../pages/user'
+import { Modal } from './modal'
 
 export default function MainLayout (props: any) {
     const user = useUser()
@@ -14,6 +16,14 @@ export default function MainLayout (props: any) {
     const dispatch = useDispatch()
     const location = useLocation()
     const navigate = useNavigate()
+
+    const [form, setForm] = useState<any>(null)
+
+    const onSave = async () => {
+        await loginCheck().then((d) => {
+            if (d.ok) dispatch(setUser(d.user))
+        })
+    }
 
     const menuClick = (e: any, item: any) => {
         if (!e.ctrlKey) {
@@ -30,12 +40,15 @@ export default function MainLayout (props: any) {
 
     return <div className="flex h-screen">
         <div className={clsNames('bg-gray-800 text-white flex flex-col', 'w-64')}>
-            <div className="p-4 flex justify-between items-center">
-                <div className={'flex flex-col'}>
-                    <h1 className="text-2xl font-bold">PSYSTEM</h1>
-                    {user && <h6 className="">{user.fullname}</h6>}
-                </div>
+
+            <div className="p-4">
+                <h1 className="text-2xl font-bold">PSYSTEM</h1>
+                {user && <div className="flex items-center gap-2 mt-2">
+                    <h6 className="flex-1 truncate">{user.fullname}</h6>
+                    <Icon name={'settings'} onClick={() => setForm(user.id)}/>
+                </div>}
             </div>
+
             <nav className="flex-1">
                 {MENU_SLIDER
                     .filter((menu) => menu.role ? (user.role.indexOf(menu.role) >= 0) : true)
@@ -61,10 +74,15 @@ export default function MainLayout (props: any) {
                     ออกจากระบบ
                 </a>
             </div>
+
         </div>
+
         <div className="flex flex-1 flex-col h-screen bg-white p-3">
             {props.children}
         </div>
+
+        <UserForm id={form} onSave={onSave} onClose={() => setForm(null)}/>
+
     </div>
 
 }

@@ -47,6 +47,7 @@ export const InputDate = (props: InputDateProps) => {
     const handleFocus = () => setIsFocused(true)
 
     return <div className={clsNames('relative', props.className)}>
+
             <label
                 className={clsNames(
                     isFocused || selectedDate ? '-translate-y-4 text-xs' : 'text-sm',
@@ -91,12 +92,12 @@ export const InputDate = (props: InputDateProps) => {
                 }
             />
 
-
             {!props.noClear && selectedDate && <Icon name="x" className={clsNames(
                 'absolute right-2 top-1/2 -translate-y-1/2',
                 'cursor-pointer text-gray-400 hover:text-gray-600'
             )} onClick={handleClear}
             />}
+
         </div>
 
 }

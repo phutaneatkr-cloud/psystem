@@ -53,14 +53,11 @@ export default function Photo (props: PhotoProps) {
                     <PhotoView url={props.value?.url || null}/>
 
                     {!props.readonly && <div>
-                        <button className={'absolute left-1 bottom-1 bg-white p-0.5 rounded'}>
-                            <Icon name={'download'} size={14} className={'text-green-500 hover:green-red-900'} onClick={() => download(props.value?.url)}/>
-                        </button>
-
-                        <button className={'absolute right-1 bottom-1 bg-white p-0.5 rounded'}>
-                            <Icon name={'trash'} size={14} className={'text-red-500 hover:text-red-900'} onClick={removePhoto}/>
-                        </button>
+                        <Icon name={'download'} size={16} className={'absolute left-1 bottom-1 bg-white p-0.5 rounded text-green-500 hover:green-red-900'}
+                              onClick={() => download(props.value?.url)}/>
+                        <Icon name={'trash'} size={16} className={'absolute right-1 bottom-1 bg-white p-0.5 rounded text-red-500 hover:text-red-900'} onClick={removePhoto}/>
                     </div>}
+
                 </div>
             }
 

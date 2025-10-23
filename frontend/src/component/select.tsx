@@ -27,6 +27,7 @@ export const Select = (props: SelectProps) => {
 
     const onClear = () => {
         props.onChange(props.multiple ? [] : null)
+        setOnFocus(false)
     }
 
     const onClearItem = (d: any) => {
@@ -106,13 +107,11 @@ export const Select = (props: SelectProps) => {
         }
     }, [])
 
-    console.log('valueIds -> ', valueIds)
-
     return <div className={clsNames('relative', props.className)}>
 
         <div ref={selectRef} className={clsNames(
             'border border-gray-300 rounded',
-            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500',
+            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500 w-full',
             props.className
         )}>
 
@@ -133,23 +132,23 @@ export const Select = (props: SelectProps) => {
                 className={clsNames('text-ellipsis text-sm w-full p-2 rounded border-none outline-none focus:ring-0 pr-1')}
             />
 
-            {!props.noClear && vName && !onFocus && <Icon name="x" className={clsNames(
+            {!props.noClear && vId && <Icon name="x" className={clsNames(
                 'absolute right-2 top-1/2 -translate-y-1/2',
                 'cursor-pointer text-gray-400 hover:text-gray-600'
             )} onClick={() => onClear()}
             />}
 
-            {!isEmpty(vName) && !onFocus && <Icon name="chevron-down" className={clsNames(
+            {!onFocus && !onOpen && !vId && <Icon name="chevron-down" className={clsNames(
                 'absolute right-2 top-1/2 -translate-y-1/2',
                 'cursor-pointer text-gray-400 hover:text-gray-600'
-            )} onClick={() => onClear()}
+            )} onClick={() => setOnOpen((prev: any) => !prev)}
             />}
         </div>
 
         {onOpen && <div ref={dropdownRef} className={clsNames(
             'flex flex-col max-h-56 overflow-y-scroll scrollable-div',
             'border border-gray-300 rounded',
-            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500',
+            'rounded bg-white  focus-within:ring-2 focus-within:ring-blue-500 w-full',
             props.className
         )}>
             {options.map((d, i: number) => (

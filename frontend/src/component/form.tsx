@@ -1,5 +1,4 @@
 import React from 'react'
-import { Icon } from './icon'
 import { clsNames } from '../utlis'
 
 export function FormContainer (props: {

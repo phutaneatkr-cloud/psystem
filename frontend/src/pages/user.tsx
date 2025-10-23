@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { get, post } from '../service/service'
+import { get, loginCheck, post, tokenService } from '../service/service'
 
 import { Button } from '../component/button'
 import { dConfirm, PageTitle, tError, tSuccess } from '../component/common'
@@ -19,6 +19,8 @@ import {
 
 import Photo from '../component/photo'
 import Paging, { createPaging } from '../component/paging'
+import { setUser, useUser } from '../service/state'
+import { useDispatch } from 'react-redux'
 
 export default function User (props: any) {
     const [wait, setWait] = useState(true)
@@ -87,7 +89,10 @@ export default function User (props: any) {
 
 }
 
-function UserForm (props: any) {
+export function UserForm (props: any) {
+    const dispatch = useDispatch()
+
+    const user = useUser()
     const [data, setData] = useState<any>(null)
     const [isPassword, setIsPassword] = useState(false)
 
@@ -132,7 +137,7 @@ function UserForm (props: any) {
             saveData.isPassword = 1
         }
 
-        post('user/save', saveData).then((d) => {
+        post('user/save', saveData).then(async (d) => {
             if (d.ok) {
                 tSuccess('บันทึกข้อมูลสำเร็จ')
                 props.onSave()
@@ -170,7 +175,7 @@ function UserForm (props: any) {
                   footer={props.id > 0 && <Button className={'ml-3'} outline={!isPassword} secondary onClick={() => setIsPassword((prev) => !prev)}>ตั้งรหัสผ่าน</Button>}>
 
         {data && <>
-            <Photo label={'ภาพโปรไฟล์'} value={data.photo} onChange={photo => onChange({ photo })}/>
+             <Photo label={'ภาพโปรไฟล์'} value={data.photo} onChange={photo => onChange({ photo })}/>
 
             <Input form label="ชื่อสกุล" className={'mt-2'} value={data.fullname} onChange={(fullname: any) => onChange({ fullname })}/>
             <Input label="ชื่อผู้ใช้งาน" className={'mt-2'} value={data.username} onChange={(username: any) => onChange({ username })}/>

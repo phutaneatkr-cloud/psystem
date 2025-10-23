@@ -40,12 +40,22 @@ export default function Login (props: any) {
 
             <h2 className="text-xl font-bold mb-6 text-center">Login</h2>
 
-            <div className="mb-3">
-                <Input label={'username'} value={username} onChange={setUsername}/>
+            <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium">Username</label>
+                <input
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                />
             </div>
-
-            <div className="mb-6">
-                <Input label={'password'} type={'password'} value={password} onChange={setPassword}/>
+            <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium">Password</label>
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                />
             </div>
 
             <Button className={'w-full py-2'} primary onClick={() => onLogin()}>Login</Button>
