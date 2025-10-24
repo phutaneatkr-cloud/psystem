@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import DatePicker, { registerLocale } from 'react-datepicker'
-import { format, getYear } from "date-fns";
 import 'react-datepicker/dist/react-datepicker.css'
 
 import { th } from 'date-fns/locale/th';
@@ -24,7 +23,7 @@ interface InputDateProps {
 
 export const InputDate = (props: InputDateProps) => {
 
-    const [isFocused, setIsFocused] = useState(false)
+    const [onFocus, setOnFocus] = useState(false)
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(
         props.value ? new Date(props.value) : null
@@ -41,16 +40,16 @@ export const InputDate = (props: InputDateProps) => {
     }
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        if (!e.target.value) setIsFocused(false)
+        if (!e.target.value) setOnFocus(false)
     }
 
-    const handleFocus = () => setIsFocused(true)
+    const handleFocus = () => setOnFocus(true)
 
     return <div className={clsNames('relative', props.className)}>
 
             <label
                 className={clsNames(
-                    isFocused || selectedDate ? '-translate-y-4 text-xs' : 'text-sm',
+                    onFocus || selectedDate ? '-translate-y-4 text-xs' : 'text-sm',
                     'absolute left-2 top-2 bg-white text-gray-500 transition-all duration-300',
                     'pointer-events-none z-10' // ← เพิ่ม z-index
                 )}
@@ -63,12 +62,15 @@ export const InputDate = (props: InputDateProps) => {
                 className="w-full"
                 selected={selectedDate}
                 onChange={handleChange}
-                onCalendarOpen={() => setIsFocused(true)}
-                onCalendarClose={() => setIsFocused(false)}
+                onCalendarOpen={() => setOnFocus(true)}
+                onCalendarClose={() => setOnFocus(false)}
                 showTimeSelect={props.time}
                 dateFormat={props.time ? 'dd/MM/yyyy HH:mm' : 'dd/MM/yyyy'}
                 placeholderText={props.placeholder}
                 locale={'th'}
+                popperContainer={({ children }) => (
+                    <div style={{ position: 'fixed', zIndex: 100 }}>{children}</div>
+                )}
                 customInput={
                     <input
                         readOnly

@@ -17,7 +17,7 @@ interface UploadProps {
 export default function Upload (props: UploadProps) {
     const [wait, setWait] = useState(false)
 
-    const [isFocused, setIsFocused] = useState(false)
+    const [onFocus, setOnFocus] = useState(false)
     const fileInputRef = useRef<HTMLInputElement | null>(null)
 
     const onChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +54,7 @@ export default function Upload (props: UploadProps) {
     return <div className={clsNames('relative w-full', props.className)}>
 
         <label className={clsNames(
-            isFocused || (!isEmpty(fileValues) || !isEmpty(fileValue)) ? '-translate-y-4 text-xs' : 'text-sm',
+            onFocus || (!isEmpty(fileValues) || !isEmpty(fileValue)) ? '-translate-y-4 text-xs' : 'text-sm',
             'absolute left-2 top-2 bg-white text-gray-500 transition-all duration-300 pointer-events-none'
         )}
                style={{ width: 'fit-content' }}>
@@ -94,8 +94,8 @@ export default function Upload (props: UploadProps) {
             multiple={props.multiple}
             className="hidden"
             onChange={onChangeFile}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}/>
+            onFocus={() => setOnFocus(true)}
+            onBlur={() => setOnFocus(false)}/>
 
     </div>
 }

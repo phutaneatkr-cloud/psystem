@@ -4,27 +4,21 @@ import { Entity } from '../utlis/entity'
 export class UserEntity extends Entity {
     constructor (a: any) {
         super()
-        try {
-            if (!isEmpty(a)) {
-                this.id = num(a.user_id)
+        if (!isEmpty(a)) {
+            this.id = num(a.user_id)
 
-                this.fullname = a.user_fullname
-                this.username = a.user_username
-                this.birthday = dbdate(a.user_birthday, false)
+            this.fullname = a.user_fullname
+            this.username = a.user_username
+            this.birthday = dbdate(a.user_birthday, false)
 
-                this.updateTime = dbdate(a.update_time)
-                this.createTime = dbdate(a.create_time)
+            this.updateTime = dbdate(a.update_time)
+            this.createTime = dbdate(a.create_time)
 
-                this.photo = jsond(a.user_photo)
-                this.files = jsond(a.attach_files) || []
+            this.photo = jsond(a.user_photo)
+            this.files = jsond(a.attach_files) || []
 
-                this.isActive = a.is_active === 1
-                if (a.is_admin === 1) {
-                    this.role.push('admin')
-                }
-            }
-        } catch (e) {
-            console.log('user entity error -> ', e)
+            this.isActive = a.is_active === 1
+            if (a.is_admin === 1) this.role.push('admin')
         }
     }
 
@@ -43,9 +37,7 @@ export class UserEntity extends Entity {
     mini () {
         return {
             id: this.id,
-            username: this.username,
-            fullname: this.fullname,
-            updateTime: this.updateTime,
+            name: this.fullname,
         }
     }
 

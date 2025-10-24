@@ -1,4 +1,4 @@
-import { Router, Request, Response, RequestHandler } from 'express'
+import { Router, Request, Response, RequestHandler, NextFunction } from 'express'
 import { dbdate, isEmpty } from '../utlis'
 import jwt from 'jsonwebtoken'
 import { table } from '../service/database'
@@ -8,7 +8,7 @@ export default abstract class Package {
     public router: Router
 
     noError = true
-    u?: any
+    user?: UserEntity
 
     private isOk = false
     private errorText = ''
@@ -22,22 +22,36 @@ export default abstract class Package {
 
     constructor () {
         this.router = Router()
+        this.router.use(this.userLoaded.bind(this))
         this.autoMapMethods()
     }
 
-    protected async user () {
+    private async userLoaded(req: Request, res: Response, next: NextFunction) {
+        if (this.user) return next()
+
+        const authHeader = req.headers['authorization']
+        if (!authHeader) return next()
+
+        const token = authHeader.replace('Bearer ', '')
+        this.token = token
+
         try {
-            const decoded: any = jwt.decode(this.token!)
+            const decoded: any = jwt.decode(token)
             const username = decoded?.username
+            if (!username) return next()
 
             const db = table('users')
             db.where('is_drop', 0)
             db.where('user_username', username)
             const raw = await db.selectOnce()
-            return raw ? new UserEntity(raw) : null
-        } catch (e) {
-            return null
+            if (raw) {
+                this.user = new UserEntity(raw)
+            }
+        } catch (err) {
+            console.error('Load user error:', err)
         }
+
+        next()
     }
 
     protected ok () {

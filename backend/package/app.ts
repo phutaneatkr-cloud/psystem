@@ -5,7 +5,7 @@ import { table } from '../service/database'
 import { UserEntity } from '../entity/user'
 import { signToken, verifyPassword, verifyToken } from '../utlis'
 
-export class App extends Package {
+export default class App extends Package {
 
     async login () {
         const username = this._username

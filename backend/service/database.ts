@@ -32,7 +32,7 @@ export const query = async (sql: string, params?: any[]) => {
     return new Promise((resolve, reject) => {
         db.query(sql, null, (err, results) => {
             if (err) return reject(err.message)
-            resolve(results as RowDataPacket[]) // ใช้ RowDataPacket[]
+            resolve(results as RowDataPacket[])
         })
     })
 }

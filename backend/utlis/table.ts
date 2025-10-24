@@ -48,6 +48,7 @@ export class Table {
     where (field: string, value: any, operator = '=') {
         this.where_fields.push(`${field} ${operator} ?`)
         this.where_values.push(value)
+        return this
     }
 
     whereIn (field: string, values: any[]) {
@@ -55,6 +56,7 @@ export class Table {
         const placeholders = values.map(() => '?').join(', ')
         this.where_fields.push(`${field} IN (${placeholders})`)
         this.where_values.push(...values)
+        return this
     }
 
     whereLike (fields: string | string[], value: any) {
@@ -72,6 +74,7 @@ export class Table {
         fieldArray.forEach(() => {
             this.where_values.push(`%${value}%`)
         })
+        return this
     }
 
     orderBy (field: string, desc: boolean = true) {
@@ -89,23 +92,28 @@ export class Table {
     set (field: string, value: any) {
         this.set_fields.push(field)
         this.set_values.push(value)
+        return this
     }
 
     setNumber (field: string, value: any, defaultValue = 0) {
         this.set(field, typeof value === 'number' ? value : num(value) || defaultValue)
+        return this
     }
 
     setDate (field: string, value: any) {
         this.set(field, dbdate(value))
+        return this
     }
 
     setNow (field: string) {
         this.set(field, new Date())
+        return this
     }
 
     setJson (field: string, value: any) {
         this.set_fields.push(field)
         this.set_values.push(!isEmpty(value) ? JSON.stringify(value) : '')
+        return this
     }
 
     // ----- Query Builders

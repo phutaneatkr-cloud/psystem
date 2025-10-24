@@ -4,7 +4,7 @@ import { UserEntity } from '../entity/user'
 import { generateUserSecret, hashPassword } from '../utlis'
 import { UserModel } from '../model/user'
 
-export class User extends Package {
+export default class User extends Package {
 
     async list () {
         const P_page = this.pnum('page', 1)

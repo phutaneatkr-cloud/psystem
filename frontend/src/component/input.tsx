@@ -48,17 +48,17 @@ export const InputSearch = (props: InputSearchProps) => {
 
 export const Input = (props: InputProps) => {
 
-    const [isFocused, setIsFocused] = useState(false)
+    const [onFocus, setOnFocus] = useState(false)
 
-    const handleFocus = () => setIsFocused(true)
+    const handleFocus = () => setOnFocus(true)
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        if (!e.target.value) setIsFocused(false)
+        if (!e.target.value) setOnFocus(false)
         props.onBlur?.(e.target.value)
     }
 
     const handleBlurTextArea = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        if (!e.target.value) setIsFocused(false)
+        if (!e.target.value) setOnFocus(false)
         props.onBlur?.(e.target.value)
     }
 
@@ -66,7 +66,7 @@ export const Input = (props: InputProps) => {
 
         <label
             className={clsNames(
-                isFocused || props.value ? '-translate-y-4 text-xs' : 'text-sm',
+                onFocus || props.value ? '-translate-y-4 text-xs' : 'text-sm',
                 'absolute left-2 top-2 bg-white  text-gray-500 transition-all duration-300',
                 'pointer-events-none', props.className
             )} style={{ width: 'fit-content' }}>
