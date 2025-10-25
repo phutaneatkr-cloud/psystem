@@ -7,6 +7,7 @@ import { Select } from '../component/select'
 import { JOBs } from '../variable/customer'
 import { Input } from '../component/input'
 import { InputDate } from '../component/inputDate'
+import { dbdate } from '../utlis'
 
 export function DevPage () {
 
@@ -15,7 +16,7 @@ export function DevPage () {
         detail: '',
         date: new Date(),
         job: null,
-        jobs:[]
+        jobs: []
     })
 
     const onChange = (update: any) => setData((prev: any) => ({ ...prev, ...update }))

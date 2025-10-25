@@ -84,21 +84,29 @@ export const date = (value: string | number | Date, format: string = 'St') => {
         const __date = typeof value === 'number'
             ? dayjs.unix(value).tz()
             : dayjs(value).tz()
-        if (__date) {
-            switch (format) {
-                case 'St':
-                    return __date.format('D MMMM YYYY HH:mm:ss')
-                case 'S':
-                    return __date.format('D MMMM YYYY')
-                default:
-                    return __date.format('D MMMM YYYY HH:mm:ss')
-            }
+
+        if (!__date.isValid()) return ''
+
+        let formatted = ''
+
+        switch (format) {
+            case 'St':
+                formatted = __date.format('D MMMM YYYY HH:mm:ss')
+                break
+            case 'S':
+                formatted = __date.format('D MMMM YYYY')
+                break
+            default:
+                formatted = __date.format('D MMMM YYYY HH:mm:ss')
+                break
         }
-        else {
-            return ''
-        }
+
+        const buddhistYear = __date.year() + 543
+        formatted = formatted.replace(__date.year().toString(), buddhistYear.toString())
+
+        return formatted
     } catch (e) {
-        console.log(`Day js [data error = ${e}]`)
+        console.log(`Dayjs [date error = ${e}]`)
         return ''
     }
 }

@@ -9,7 +9,7 @@ export class UserModel extends Model {
         this.db.where('is_drop', 0)
     }
 
-    protected setDatas (rows: any[]) {
+    protected async setDatas (rows: any[]) {
         return rows.map((r) => new UserEntity(r))
     }
 

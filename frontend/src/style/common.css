@@ -1,20 +1,3 @@
-.flatpickr-wrapper {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.flatpickr-clear-button {
-    background: none;
-    border: none;
-    color: #717885;
-    font-size: 14px;
-    cursor: pointer;
-    margin-left: -25px;
-    padding: 0;
-}
-
-
 .scrollable-div {
     overflow: auto; /* เปิดการ Scroll ทั้งแนวตั้งและแนวนอน */
 }
@@ -36,26 +19,6 @@
 .scrollable-div::-webkit-scrollbar-track {
     background-color: #f3f4f6; /* Tailwind bg-gray-100 */
     border-radius: 4px;
-}
-
-
-.loader {
-    #border: 16px solid #f3f3f3;
-    #border-top: 16px solid #3498db;
-    #border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    animation: spin 2s linear infinite;
-    opacity: .3;
-
-    position: fixed;
-    top: 40%;
-    left: 52%;
-    #transform: translate(-50%, -50%);
-
-    z-index: 9999;
-
-    background-color: transparent;
 }
 
 @keyframes spin {
@@ -83,17 +46,62 @@
     font-weight: bold; /* Optional: Change weight */
 }
 
-/*
-.loader {
-    border: 16px solid #f3f3f3; !* Light grey *!
-    border-top: 16px solid #3498db; !* Blue *!
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
+
+.datepicker-horizontal {
+    display: flex !important;
+    flex-direction: row !important;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}*/
+.datepicker-horizontal .react-datepicker__time-container {
+    border-left: 1px solid #ddd;
+    margin-left: 0px;
+}
+
+.datepicker-horizontal .react-datepicker__time-container .react-datepicker__time {
+    border-left: none;
+}
+
+.datepicker-horizontal .react-datepicker__time-box {
+    width: 80px;
+}
+
+.react-datepicker__time-container .react-datepicker-time__header {
+    height: 24px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+}
+
+
+.react-datepicker__time-container .react-datepicker-time__header {
+    height: 24px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+}
+
+.react-datepicker__time-container {
+    width: 85px;
+}
+
+.react-datepicker__time-container .react-datepicker__time {
+    background: white;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
+    width: 85px !important;
+    height: 195px !important;
+    overflow-y: auto !important;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
+    height: auto !important;
+    padding: 0;
+    overflow-y: hidden !important;
+}

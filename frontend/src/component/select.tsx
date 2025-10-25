@@ -137,13 +137,13 @@ export const Select = (props: SelectProps) => {
 
 
             {!props.noClear && vId && <Icon name="x" className={clsNames(
-                'absolute right-2 top-1/2 -translate-y-1/2',
+                'absolute right-1.5 top-1/2 -translate-y-1/2',
                 'cursor-pointer text-gray-400 hover:text-gray-600'
             )} onClick={() => onClear()}
             />}
 
             {!onFocus && !onOpen && !vId && <Icon name="chevron-down" className={clsNames(
-                'absolute right-2 top-1/2 -translate-y-1/2',
+                'absolute right-1.5 top-1/2 -translate-y-1/2',
                 'cursor-pointer text-gray-400 hover:text-gray-600'
             )} onClick={() => setOnOpen((prev: any) => !prev)}
             />}

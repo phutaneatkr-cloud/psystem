@@ -1,9 +1,9 @@
 import Package from '../utlis/package'
 import { table } from '../service/database'
-import { UserModel } from '../model/user'
-import { UserEntity } from '../entity/user'
 import { CustomerEntity } from '../entity/customer'
 import { CustomerModel } from '../model/customer'
+import { UserEntity } from '../entity/user'
+import { isEmpty } from '../utlis'
 
 export default class customer extends Package {
 
@@ -20,6 +20,17 @@ export default class customer extends Package {
         this.ok()
         return o.pagingDatas(datas)
 
+    }
+
+    async get () {
+
+        const o = new CustomerModel()
+        const data = await o.getById(this.pnum('id'))
+
+        if (!isEmpty(data)) {
+            this.ok()
+            return { data: data!.array() }
+        }
     }
 
     async save () {

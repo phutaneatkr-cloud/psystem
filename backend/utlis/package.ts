@@ -27,28 +27,32 @@ export default abstract class Package {
     }
 
     private async userLoaded(req: Request, res: Response, next: NextFunction) {
-        if (this.user) return next()
-
         const authHeader = req.headers['authorization']
         if (!authHeader) return next()
 
         const token = authHeader.replace('Bearer ', '')
-        this.token = token
 
-        try {
-            const decoded: any = jwt.decode(token)
-            const username = decoded?.username
-            if (!username) return next()
+        if (this.token !== token) {
+            this.user = undefined
+            this.token = token
+        }
 
-            const db = table('users')
-            db.where('is_drop', 0)
-            db.where('user_username', username)
-            const raw = await db.selectOnce()
-            if (raw) {
-                this.user = new UserEntity(raw)
+        if (!this.user) {
+            try {
+                const decoded: any = jwt.decode(token)
+                const username = decoded?.username
+                if (!username) return next()
+
+                const db = table('users')
+                db.where('is_drop', 0)
+                db.where('user_username', username)
+                const raw = await db.selectOnce()
+                if (raw) {
+                    this.user = new UserEntity(raw)
+                }
+            } catch (err) {
+                console.error('Load user error:', err)
             }
-        } catch (err) {
-            console.error('Load user error:', err)
         }
 
         next()

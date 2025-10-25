@@ -48,10 +48,10 @@ export default function Customer (props: any) {
         <ListContainer wait={wait}>
             <ListHead>
                 <div className={'w-12 text-center'}>#</div>
-                <div className={'w-20 text-center'}>เพศ</div>
                 <div className={'w-full'}>ชื่อสกุล</div>
+                <div className={'w-20 text-center'}>เพศ</div>
                 <div className={'w-44 text-center'}>วัน/เดือน/ปีเกิด</div>
-                <div className={'w-32 text-center'}>อาขีพ</div>
+                <div className={'w-32 text-center'}>แก้ไชโดย</div>
                 <div className={'w-64 text-right'}>อัพเดทล่าสุด</div>
             </ListHead>
             <ListBody>
@@ -59,10 +59,10 @@ export default function Customer (props: any) {
                     return <List key={'item_' + d.id}>
                         <ListButton onClick={() => setForm(d.id)}>
                             <div className={'w-12 text-center'}>{d._rownum}</div>
-                            <div className={'w-20 text-center'}>{d.gender?.name}</div>
                             <div className={'w-full'}>{d.fullname}</div>
+                            <div className={'w-20 text-center'}>{d.gender?.name}</div>
                             <div className={'w-44 text-center'}>{date(d.birthday, 'S')}</div>
-                            <div className={'w-32 text-center'}>{d.job?.name}</div>
+                            <div className={'w-32 text-center'}>{d.updateUser?.name}</div>
                             <div className={'w-64 text-right'}>{date(d.updateTime, 'St')}</div>
                         </ListButton>
                     </List>
@@ -80,13 +80,13 @@ function CustomerForm (props: any) {
 
     const loadData = () => {
         if (props.id > 0) {
-            get('customer/get/' + props.id,).then(d => {
+            get('customer/get', { id: props.id }).then(d => {
                 if (d.ok) {
                     setData(d.data)
                 }
             })
         }
-        else setData({ id: 0, gender: 0 })
+        else setData({ id: 0, gender: GENDERs[0] })
     }
 
     const saveData = (c: any) => {
@@ -94,11 +94,11 @@ function CustomerForm (props: any) {
             id: props.id,
             name: data.name,
             lastname: data.lastname,
-            gender: data.gender,
+            gender: data.gender?.id,
             birthday: dbdate(data.birthday),
             tel: data.tel,
             line: data.line,
-            job: data.job,
+            job: data.job?.id,
             address: data.address
         }
 
@@ -146,7 +146,7 @@ function CustomerForm (props: any) {
             </div>
 
             <div className={'flex space-x-2 mt-3'}>
-                <Radio label={'เพศ'} className={'w-1/2'} value={data.gender} options={GENDERs} onChange={gender => onChange({ gender })}/>
+                <Radio label={'เพศ'} className={'w-1/2'} value={data.gender?.id} options={GENDERs} onChange={(_, gender) => onChange({ gender })}/>
                 <InputDate label="วัน/เดือน/ปีเกิด" className={'w-1/2'} value={data.birthday} onChange={birthday => onChange({ birthday })}/>
             </div>
 
@@ -155,7 +155,7 @@ function CustomerForm (props: any) {
                 <Input label="ไลน์" className={'w-1/2'} value={data.line} onChange={line => onChange({ line })}/>
             </div>
 
-            <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
+            <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={(_,job) => onChange({ job })}/>
             <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/>
         </>
         }
