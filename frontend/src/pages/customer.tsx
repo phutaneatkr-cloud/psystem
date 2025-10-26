@@ -12,23 +12,26 @@ import { InputDate } from '../component/inputDate'
 import { GENDERs, JOBs } from '../variable/customer'
 import { Radio } from '../component/radio'
 import { Select } from '../component/select'
+import Paging, { createPaging } from '../component/paging'
 
 export default function Customer (props: any) {
 
     const [wait, setWait] = useState(true)
 
     const [datas, setDatas] = useState([])
-
-    const [search, setSearch] = useState('')
-
     const [form, setForm] = useState<any>(null)
 
-    const loadList = useDebounce(() => {
+    const [search, setSearch] = useState('')
+    const [paging, setPaging] = useState(createPaging(1))
+
+    const loadList = useDebounce((p?: any) => {
+        if (!p) p = paging
         setWait(true)
-        const params = { search }
+        const params = { search, page: p?.page || 1 }
         get('customer/list', params).then(d => {
             if (d.ok) {
                 setDatas(d.datas)
+                setPaging(d.paging)
             }
         }).finally(() => setWait(false))
     }, 300)
@@ -47,29 +50,29 @@ export default function Customer (props: any) {
 
         <ListContainer wait={wait}>
             <ListHead>
-                <div className={'w-12 text-center'}>#</div>
+                <div className={'w-12 c'}>#</div>
                 <div className={'w-full'}>ชื่อสกุล</div>
-                <div className={'w-20 text-center'}>เพศ</div>
-                <div className={'w-44 text-center'}>วัน/เดือน/ปีเกิด</div>
-                <div className={'w-32 text-center'}>แก้ไชโดย</div>
-                <div className={'w-64 text-right'}>อัพเดทล่าสุด</div>
+                <div className={'w-20 c'}>เพศ</div>
+                <div className={'w-64 c'}>วัน/เดือน/ปีเกิด</div>
+                <div className={'w-32 c'}>แก้ไชโดย</div>
+                <div className={'w-64 r'}>อัพเดทล่าสุด</div>
+                <div className={'w-32'}/>
             </ListHead>
             <ListBody>
                 {datas.map((d: any, i: number) => {
                     return <List key={'item_' + d.id}>
-                        <ListButton onClick={() => setForm(d.id)}>
-                            <div className={'w-12 text-center'}>{d._rownum}</div>
-                            <div className={'w-full'}>{d.fullname}</div>
-                            <div className={'w-20 text-center'}>{d.gender?.name}</div>
-                            <div className={'w-44 text-center'}>{date(d.birthday, 'S')}</div>
-                            <div className={'w-32 text-center'}>{d.updateUser?.name}</div>
-                            <div className={'w-64 text-right'}>{date(d.updateTime, 'St')}</div>
-                        </ListButton>
+                        <div className={'w-12 c'}>{d._rownum}</div>
+                        <div className={'w-full'}>{d.fullname}</div>
+                        <div className={'w-20 c'}>{d.gender?.name}</div>
+                        <div className={'w-64 c'}>{date(d.birthday, 'S')}</div>
+                        <div className={'w-32 c'}>{d.updateUser?.name}</div>
+                        <div className={'w-64 r'}>{date(d.updateTime, 'St')}</div>
+                        <div className={'w-32 text-center'}><Button sm success onClick={() => setForm(d.id)}>ตั้งค่า</Button></div>
                     </List>
                 })}
             </ListBody>
         </ListContainer>
-
+        <Paging className={'mt-3'} page={paging} onChange={loadList}/>
         <CustomerForm id={form} onSave={loadList} onClose={() => setForm(null)}/>
     </>
 }
@@ -155,7 +158,7 @@ function CustomerForm (props: any) {
                 <Input label="ไลน์" className={'w-1/2'} value={data.line} onChange={line => onChange({ line })}/>
             </div>
 
-            <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={(_,job) => onChange({ job })}/>
+            <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={(_, job) => onChange({ job })}/>
             <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/>
         </>
         }

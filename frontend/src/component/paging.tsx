@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { clsNames } from '../utlis'
 
 export interface PagingData {
@@ -49,7 +50,7 @@ export default function Paging (props: PagingProps) {
         return pages
     }
 
-    const handleClick = (p: number | string) => {
+    const onChangePage = (p: number | string) => {
         if (typeof p === 'number' && p !== page) onChange({ ...props.page, page: p })
     }
 
@@ -60,7 +61,7 @@ export default function Paging (props: PagingProps) {
                 p === '...' ? <span key={i} className="px-2 text-gray-500">...</span>
                     : <button
                         key={i}
-                        onClick={() => handleClick(p)}
+                        onClick={() => onChangePage(p)}
                         className={`px-3 py-1 rounded-md border text-sm transition-colors ${
                             p === page
                                 ? 'bg-gray-800 text-white border-gray-800'
@@ -69,6 +70,5 @@ export default function Paging (props: PagingProps) {
                         {p}
                     </button>)
         })()}
-
     </div>
 }

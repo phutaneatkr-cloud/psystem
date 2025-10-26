@@ -1,7 +1,7 @@
-import React, { FocusEventHandler, useState } from 'react'
-import { RefreshCcw } from 'lucide-react'
+import React, { useState } from 'react'
 
 import { clsNames } from '../utlis'
+import { Icon } from './icon'
 
 interface InputProps {
     label?: string;
@@ -35,13 +35,7 @@ export const InputSearch = (props: InputSearchProps) => {
             placeholder={props.placeholder || undefined}
             className={`flex-1 text-sm p-2 focus:outline-none bg-transparent pr-1 pl-2`}/>
 
-        {props.onRefresh && <div className="pr-2 text-gray-500 flex items-center">
-            <RefreshCcw
-                size={16}
-                className="cursor-pointer text-green-500 hover:text-green-600 transition-colors duration-200"
-                onClick={props.onRefresh}
-            />
-        </div>}
+        {props.onRefresh && <Icon button name={'refresh'} className={'text-green-500'} onClick={props.onRefresh}/>}
 
     </div>
 }

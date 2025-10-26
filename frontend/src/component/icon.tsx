@@ -1,7 +1,7 @@
 import React from 'react'
 
 import * as TablerIcons from '@tabler/icons-react'
-import { IconQuestionMark } from '@tabler/icons-react';
+import { IconQuestionMark } from '@tabler/icons-react'
 
 import { clsNames } from '../utlis'
 import { ICONs } from '../variable/icon'
@@ -14,26 +14,33 @@ interface I_IconProps {
     color?: string
     className?: string
     button?: boolean
+    solid?: boolean,
     onClick?: (e?: any) => void
 }
 
-export function Icon (props: I_IconProps) {
+export const Icon = (props: I_IconProps) => {
 
-    const pascalName = props.name
+    const iconName = props.name
         .split('-')
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-        .join('');
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join('')
 
-    const IconComponent = (TablerIcons as any)['Icon' + pascalName];
+    let IconComponent = (TablerIcons as any)['Icon' + iconName]
+
+    if (props.solid) {
+        const FilledComponent = (TablerIcons as any)['Icon' + iconName + 'Filled']
+        if (FilledComponent) {
+            IconComponent = FilledComponent
+        }
+    }
 
     if (!IconComponent)
-        return <IconQuestionMark size={14} className={'text-red-500'}/>
+        return <IconQuestionMark size={props.size || 14} className="text-red-500"/>
 
-    return  <button
+    return <button
         onClick={props.onClick}
-        className={clsNames('' +
-            'flex items-center justify-center rounded-full cursor-pointer transition-colors duration-200',
-            props.button && 'w-8 h-8 hover:bg-gray-200',
+        className={clsNames('flex items-center justify-center rounded-full transition-colors duration-200',
+            props.button ? 'cursor-pointer w-8 h-8 hover:bg-gray-200' : 'cursor-default',
             props.className)}>
         <IconComponent size={props.size || 15} color={props.color} className={props.className}/>
     </button>

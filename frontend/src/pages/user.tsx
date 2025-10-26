@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { get, loginCheck, post, tokenService } from '../service/service'
-
+import { get, post } from '../service/service'
 import { Button } from '../component/button'
 import { dConfirm, PageTitle, tError, tSuccess } from '../component/common'
 import { Input, InputSearch } from '../component/input'
@@ -9,18 +8,12 @@ import { Modal } from '../component/modal'
 import { InputDate } from '../component/inputDate'
 
 import { date, dbdate, isEmpty, useDebounce } from '../utlis'
-import {
-    List,
-    ListBody,
-    ListButton,
-    ListContainer,
-    ListHead,
-} from '../component/list'
+import { List, ListBody, ListContainer, ListHead, } from '../component/list'
 
 import Photo from '../component/photo'
 import Paging, { createPaging } from '../component/paging'
-import { setUser, useUser } from '../service/state'
-import { useDispatch } from 'react-redux'
+import { Icon } from '../component/icon'
+import { IconActive } from '../component/iconActive'
 
 export default function User (props: any) {
     const [wait, setWait] = useState(true)
@@ -32,9 +25,7 @@ export default function User (props: any) {
     const [paging, setPaging] = useState(createPaging(1))
 
     const loadList = useDebounce((p?: any) => {
-
         if (!p) p = paging
-
         setWait(true)
         const params = { search, page: p?.page || 1 }
         get('user/list', params).then((d) => {
@@ -59,27 +50,25 @@ export default function User (props: any) {
 
         <ListContainer wait={wait}>
             <ListHead>
-                <div className={'w-12 text-center'}>#</div>
+                <div className={'w-icon c'}/>
+                <div className={'w-12 c'}>#</div>
                 <div className={'w-64'}>ชื่อผู้ใช้งาน</div>
                 <div className={'w-full'}>ชื่อสกุล</div>
-                <div className={'w-52 '}>อัพเดทล่าสุด</div>
-                <div className={'w-20'}/>
+                <div className={'w-date-st r'}>อัพเดทล่าสุด</div>
+                <div className={'w-32'}/>
             </ListHead>
             <ListBody>
                 {datas.map((d: any, i: number) => {
-                    return (
-                        <List key={'item_' + d.id}>
-                            <ListButton>
-                                <div className={'w-12 text-center'}>{i + 1}</div>
-                                <div className={'w-64'}>{d.username}</div>
-                                <div className={'w-full'}>{d.fullname}</div>
-                                <div className={'w-52'}>
-                                    {date(d.updateTime, 'St')}
-                                </div>
-                                <div className={'w-20'}><Button sm success onClick={() => setForm(d.id)}>ตั้งค่า</Button></div>
-                            </ListButton>
-                        </List>
-                    )
+                    return <List key={'item_' + d.id}>
+                        <div className={'w-icon c'}>
+                            <IconActive active={d.isActive} url={''}/>
+                        </div>
+                        <div className={'w-12 c'}>{i + 1}</div>
+                        <div className={'w-64'}>{d.username}</div>
+                        <div className={'w-full'}>{d.fullname}</div>
+                        <div className={'w-date-st r'}>{date(d.updateTime, 'St')}</div>
+                        <div className={'w-32 c'}><Button sm success onClick={() => setForm(d.id)}>ตั้งค่า</Button></div>
+                    </List>
                 })}
             </ListBody>
         </ListContainer>
@@ -90,9 +79,6 @@ export default function User (props: any) {
 }
 
 export function UserForm (props: any) {
-    const dispatch = useDispatch()
-
-    const user = useUser()
     const [data, setData] = useState<any>(null)
     const [isPassword, setIsPassword] = useState(false)
 
@@ -122,7 +108,8 @@ export function UserForm (props: any) {
             birthday: dbdate(data.birthday),
             password: '',
             isPassword: 0,
-            photo: data.photo || null
+            photo: data.photo || null,
+
         }
 
         if (data.username === '') return c(tError('กรุณากรอกชื่อผู้ใช้งาน'))
@@ -175,7 +162,7 @@ export function UserForm (props: any) {
                   footer={props.id > 0 && <Button className={'ml-3'} outline={!isPassword} secondary onClick={() => setIsPassword((prev) => !prev)}>ตั้งรหัสผ่าน</Button>}>
 
         {data && <>
-             <Photo label={'ภาพโปรไฟล์'} value={data.photo} onChange={photo => onChange({ photo })}/>
+            <Photo label={'ภาพโปรไฟล์'} value={data.photo} onChange={photo => onChange({ photo })}/>
 
             <Input form label="ชื่อสกุล" className={'mt-2'} value={data.fullname} onChange={(fullname: any) => onChange({ fullname })}/>
             <Input label="ชื่อผู้ใช้งาน" className={'mt-2'} value={data.username} onChange={(username: any) => onChange({ username })}/>

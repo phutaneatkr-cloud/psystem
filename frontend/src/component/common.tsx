@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import { LoaderCircle } from 'lucide-react'
+import { Icon } from './icon'
 
 const MySwal = withReactContent(Swal)
 
@@ -25,7 +25,9 @@ export const PageTitle = (props: I_PageTitleProps) => {
 }
 
 export const Wait = () => {
-    return <LoaderCircle size={16} className="loader text-gray-500 transition-colors duration-200"/>
+    return <div className="ml-64 fixed inset-0 flex items-center justify-center z-[9999] bg-transparent">
+        <Icon name="inner-shadow-bottom-right" size={120} color="gray" className="animate-spin-slow opacity-50"/>
+    </div>
 }
 
 export const tSuccess = (title: string, subtitle?: string) => {

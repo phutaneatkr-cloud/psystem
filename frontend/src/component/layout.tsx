@@ -49,7 +49,7 @@ export default function MainLayout (props: any) {
                 </div>}
             </div>
 
-            <nav className="flex-1">
+            <div className="flex-1">
                 {MENU_SLIDER
                     .filter((menu) => menu.role ? (user.role.indexOf(menu.role) >= 0) : true)
                     .map((menu, index) => {
@@ -65,7 +65,7 @@ export default function MainLayout (props: any) {
                             </a>
                         </div>
                     })}
-            </nav>
+            </div>
 
             <div className="p-4">
                 <a href="#"
