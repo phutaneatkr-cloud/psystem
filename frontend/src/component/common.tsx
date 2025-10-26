@@ -6,7 +6,7 @@ import { LoaderCircle } from 'lucide-react'
 
 const MySwal = withReactContent(Swal)
 
-interface PageTieleProps {
+interface I_PageTitleProps {
     title?: string;
     icon?: string;
 
@@ -15,7 +15,7 @@ interface PageTieleProps {
     children?: ReactNode;
 }
 
-export const PageTitle = (props: PageTieleProps) => {
+export const PageTitle = (props: I_PageTitleProps) => {
     return <div className="flex items-center">
         <span className={'w-fit'}>{props.title}</span>
         <div className="ml-3 flex flex-1">
@@ -25,10 +25,7 @@ export const PageTitle = (props: PageTieleProps) => {
 }
 
 export const Wait = () => {
-    return <LoaderCircle
-        size={16}
-        className="loader text-gray-500 transition-colors duration-200"
-    />
+    return <LoaderCircle size={16} className="loader text-gray-500 transition-colors duration-200"/>
 }
 
 export const tSuccess = (title: string, subtitle?: string) => {
@@ -54,7 +51,7 @@ export const tError = (title: string, subtitle?: string) => {
     })
 }
 
-export const dConfirm = (title: string, subtitle?: string)  => {
+export const dConfirm = (title: string, subtitle?: string) => {
     return MySwal.fire({
         icon: 'question',
         width: 400,

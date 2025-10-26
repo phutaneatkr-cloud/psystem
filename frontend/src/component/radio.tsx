@@ -23,7 +23,8 @@ export const Radio = (props: RadioProps) => {
         props.onChange(id, v)
     }
 
-    return <div className={'relative flex-1'}>
+    return <div className={clsNames('relative', props.className)}>
+
         <label className={'text-xs text-gray-500'}>
             {props.label}
         </label>

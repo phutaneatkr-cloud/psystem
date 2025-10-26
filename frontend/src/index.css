@@ -1,6 +1,4 @@
-@import "./style/common.css";
-
-/*@import "./style/form.scss";*/
+@import "./style/common.scss";
 @import "./style/input.scss";
 @import "./style/select.scss";
 

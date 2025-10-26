@@ -12,7 +12,7 @@ import { clsNames } from '../utlis'
 
 interface InputDateProps {
     label?: string
-    value?: Date | string | number
+    value?: Date | string | number | null
     className?: string
     placeholder?: string
     form?: boolean

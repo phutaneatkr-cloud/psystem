@@ -1,10 +1,10 @@
-import React, { MouseEventHandler, ReactNode, useMemo } from 'react'
+import React, {  ReactNode, useMemo } from 'react'
+
 import { clsNames } from '../utlis'
 import { ColorName } from './var'
 
-export interface ButtonProps {
+export interface I_ButtonProps {
     href?: string
-    download?: boolean
     targetBlank?: boolean
     className?: string
     outline?: boolean
@@ -62,7 +62,7 @@ const _convOutLineColor = (props: any) => {
     return "";
 }
 
-export const Button = (props: ButtonProps) => {
+export const Button = (props: I_ButtonProps) => {
 
     const cls = useMemo(() => {
         return clsNames(
