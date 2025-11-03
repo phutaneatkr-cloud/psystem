@@ -10,21 +10,19 @@ export function ListContainer (props: { wait?: boolean, children: React.ReactNod
         const others = childrenArray.filter((d: any) => React.isValidElement(d) && d.type && (d.type as any).name !== 'ListHead')
 
         if (head) {
-            return <div className={'flex-1'}>
+            return <div className="flex flex-col flex-1 overflow-hidden">
                 {props.wait && <Wait/>}
                 <div className="mt-3 border border-b-0">{head}</div>
-                <div className="flex flex-col flex-1 overflow-y-auto border scrollable-div">
+                <div className="flex-1 overflow-y-auto border scrollable-div">
                     {others}
                 </div>
             </div>
         }
     }
-    return <>
+    return <div className="flex flex-col flex-1 overflow-y-auto mt-3 border scrollable-div">
         {props.wait && <Wait/>}
-        <div className="mt-3 flex flex-col flex-1 overflow-y-auto border scrollable-div">
-            {props.children}
-        </div>
-    </>
+        {props.children}
+    </div>
 }
 
 export function ListHead (props: any) {
@@ -37,16 +35,17 @@ export function ListHead (props: any) {
     </React.Fragment>
 }
 
-export function ListBody (props: any) {
-    return <React.Fragment key={'listBody'}>
+export function ListBody (props: { children: ReactNode, scroll?: boolean }) {
+    return <div key={'listBody'} className={props.scroll ? 'flex-1 overflow-y-auto' : ''}>
         {props.children}
-    </React.Fragment>
+    </div>
+
 }
 
 export function List (props: any) {
 
     if (props.children.length > 0) {
-        return <div className="flex text-xs border-b hover:bg-blue-50">
+        return <div className="flex text-xs border-b hover:bg-blue-50 items-center">
             {props.children.map((d: any) => {
                 return { ...d, props: { ...d.props, className: clsNames(d.props.className, 'px-2 py-1 border-r') } }
             })}

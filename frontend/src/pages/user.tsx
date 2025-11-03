@@ -50,7 +50,7 @@ export default function User (props: any) {
 
         <ListContainer wait={wait}>
             <ListHead>
-                <div className={'w-icon c'}/>
+                <div className={'w-12 c'}/>
                 <div className={'w-12 c'}>#</div>
                 <div className={'w-64'}>ชื่อผู้ใช้งาน</div>
                 <div className={'w-full'}>ชื่อสกุล</div>
@@ -60,8 +60,8 @@ export default function User (props: any) {
             <ListBody>
                 {datas.map((d: any, i: number) => {
                     return <List key={'item_' + d.id}>
-                        <div className={'w-icon c'}>
-                            <IconActive active={d.isActive} url={''}/>
+                        <div className={'w-12 c'}>
+                            <IconActive active={d.isActive} url={'user/active?id=' + d.id}/>
                         </div>
                         <div className={'w-12 c'}>{i + 1}</div>
                         <div className={'w-64'}>{d.username}</div>

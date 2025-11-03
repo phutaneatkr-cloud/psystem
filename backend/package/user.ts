@@ -1,5 +1,5 @@
 import Package from '../utlis/package'
-import { table } from '../service/database'
+import { db, table } from '../service/database'
 import { UserEntity } from '../entity/user'
 import { generateUserSecret, hashPassword } from '../utlis'
 import { UserModel } from '../model/user'
@@ -21,13 +21,11 @@ export default class User extends Package {
     }
 
     async get () {
-        const db = table('users')
-        db.where('user_id', this.pnum('id'))
-
-        const data = await db.selectOnce().then((d) => new UserEntity(d).array())
+        const o = new UserModel()
+        const data: UserEntity = await o.getById(this.pnum('id'))
 
         this.ok()
-        return { data }
+        return { data: data.array() }
     }
 
     async save () {
@@ -106,5 +104,20 @@ export default class User extends Package {
 
         this.ok()
         return { id: P_id }
+    }
+
+    async active () {
+        const o = new UserModel()
+        const data: UserEntity = await o.getById(this.pnum('id'))
+        if (data) {
+            await table('users')
+                .setNow('update_time')
+                .setNumber('is_active', data.isActive ? 0 : 1)
+                .where('user_id', data.id)
+                .update()
+
+            this.ok()
+            return { active: !data.isActive }
+        }
     }
 }

@@ -31,17 +31,15 @@ export const Radio = (props: RadioProps) => {
 
         <div className={'flex w-full text-center text-sm'}>
             {props.options.map((e, i: number) => {
-                return <div className={'flex'} key={'item_' + i}>
+                return <div key={'item_' + i} className={'flex items-center cursor-pointer mr-1'} onClick={() => onClick(e.id)}>
                     <input
-                        className={clsNames('mx-2', 'cursor-pointer')}
+                        className={'mr-1'}
                         value={e.id}
                         checked={e.id === props.value}
                         name={'group1'}
                         type="radio"
-                        onChange={onChange}
-                    />
-                    <span className={clsNames(props.sm ? 'text-sm' : 'text-sm', 'cursor-pointer hover:text-blue-300')}
-                          onClick={() => onClick(e.id)}>
+                        onChange={onChange}/>
+                    <span className={clsNames(props.sm ? 'text-sm' : 'text-sm', 'cursor-pointer hover:text-blue-300')}>
                         {e.name || e.text}
                     </span>
                 </div>

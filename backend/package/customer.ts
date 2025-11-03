@@ -4,6 +4,7 @@ import { CustomerEntity } from '../entity/customer'
 import { CustomerModel } from '../model/customer'
 import { UserEntity } from '../entity/user'
 import { isEmpty } from '../utlis'
+import { UserModel } from '../model/user'
 
 export default class customer extends Package {
 
@@ -64,6 +65,21 @@ export default class customer extends Package {
         this.ok()
         return { id }
 
+    }
+
+    async active () {
+        const o = new CustomerModel()
+        const data = await o.getById(this.pnum('id'))
+        if (data != null) {
+            await table('customer')
+                .setNow('update_time')
+                .setNumber('is_active', data.isActive ? 0 : 1)
+                .where('customer_id', data.id)
+                .update()
+
+            this.ok()
+            return { active: !data.isActive }
+        }
     }
 
 }

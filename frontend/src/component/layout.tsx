@@ -45,7 +45,7 @@ export default function MainLayout (props: any) {
                 <h1 className="text-2xl font-bold">PSYSTEM</h1>
                 {user && <div className="flex items-center gap-2 mt-2">
                     <h6 className="flex-1 truncate">{user.fullname}</h6>
-                    <Icon name={'settings'} onClick={() => setForm(user.id)}/>
+                    <Icon className={'cursor-pointer'} name={'settings'} onClick={() => setForm(user.id)}/>
                 </div>}
             </div>
 
@@ -77,7 +77,7 @@ export default function MainLayout (props: any) {
 
         </div>
 
-        <div className="flex flex-1 flex-col h-screen bg-white p-3">
+        <div className="flex flex-1 flex-col h-screen bg-white p-3 overflow-hidden">
             {props.children}
         </div>
 

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import Package from '../utlis/package'
 import { table } from '../service/database'
 import { UserEntity } from '../entity/user'
-import { signToken, verifyPassword, verifyToken } from '../utlis'
+import { num, signToken, verifyPassword, verifyToken } from '../utlis'
 
 export default class App extends Package {
 
@@ -17,21 +17,27 @@ export default class App extends Package {
         const raw = await db.selectOnce()
 
         if (raw) {
-            const next = await verifyPassword(password!, raw.user_password)
-            if (next) {
-                const secret: any = process.env.APP_TOKEN_SECRET + raw.user_secret
-                const token = signToken(raw.user_username, secret)
+            console.log('raw -> ',raw)
+            if (num(raw.is_active) === 1) {
+                const next = await verifyPassword(password!, raw.user_password)
+                if (next) {
+                    const secret: any = process.env.APP_TOKEN_SECRET + raw.user_secret
+                    const token = signToken(raw.user_username, secret)
 
-                if (token != null) {
-                    const user = new UserEntity(raw)
+                    if (token != null) {
+                        const user = new UserEntity(raw)
 
-                    this.ok()
-                    return {
-                        user: user.array(),
-                        token,
-                        message: 'login success',
+                        this.ok()
+                        return {
+                            user: user.array(),
+                            token,
+                            message: 'login success',
+                        }
                     }
                 }
+            }
+            else {
+                this.error('ผู้ใช้งานนี้ยังไม่เปิดให้ใช้งาน')
             }
         }
         else {

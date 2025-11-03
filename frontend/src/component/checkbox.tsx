@@ -73,20 +73,28 @@ export const Checkbox = (props: I_CheckboxProps) => {
                 return <div className={clsNames('flex', props.vertical ? 'flex-col' : 'space-x-2')}>
                     {items.map((item, i) => {
                         const v = datas.indexOf(String(item.id)) >= 0
-                        return <div key={'item_' + i} className={'flex'}>
-                            <input style={{ width: 15, height: 15 }} className={'my-auto'} type={'checkbox'}
-                                   checked={v} onChange={() => onChange(items, datas, String(item?.id), !v)}/>
-                            <div className={'text-sm ml-2 cursor-pointer hover:text-blue-300'} onClick={() => onChange(items, datas, String(item?.id), !v)}>{item?.name}</div>
+                        return <div
+                            key={'item_' + i}
+                            onClick={() => onChange(items, datas, String(item?.id), !v)}
+                            className="flex items-center cursor-pointer hover:text-blue-400 transition-colors select-none">
+                            <input
+                                type="checkbox"
+                                checked={v}
+                                onChange={() => {}}
+                                style={{ width: 15, height: 15 }}
+                                className="mr-2 accent-blue-500 cursor-pointer"/>
+                            <div className="text-sm">{item?.name}</div>
                         </div>
+
                     })}
                 </div>
             }
             else {
                 const v = typeof props.checked === 'boolean' ? props.checked : props.checked === 1
-                return <div className={'flex w-full'}>
-                    <input style={{ width: 15, height: 15 }} className={'my-auto'} type={'checkbox'}
-                           checked={v} onChange={() => props.onChange(!v, [])}/>
-                    <div className={'text-sm ml-2 cursor-pointer hover:text-blue-300'} onClick={() => props.onChange(!v, [])}>{props.text}</div>
+                return <div className={'flex w-full cursor-pointer hover:text-blue-300'}
+                            onClick={() => props.onChange(!v, [])}>
+                    <input style={{ width: 15, height: 15 }} className={'my-auto'} type={'checkbox'} checked={v}/>
+                    <div className={'text-sm ml-2'}>{props.text}</div>
                 </div>
             }
         })()}

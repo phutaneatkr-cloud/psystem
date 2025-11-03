@@ -1,6 +1,7 @@
 import { Icon, T_IconName } from './icon'
 import React, { useState } from 'react'
 import { clsNames } from '../utlis'
+import { get } from '../service/service'
 
 interface I_IconActiveProps {
     nameOn?: T_IconName
@@ -15,10 +16,25 @@ interface I_IconActiveProps {
 export const IconActive = (props: I_IconActiveProps) => {
 
     const [active, setActive] = useState(props.active || false)
+    const [activeError, setActiveError] = useState(false)
 
     const onChange = () => {
-        setActive(prev => !prev)
+        if (!activeError) {
+            get(props.url).then(d => {
+                if (d.ok) {
+                    setActive(prev => !prev)
+                }
+            }).catch((err) => {
+                setActiveError(true)
+            })
+        }
     }
+
+    if (activeError)
+        return <Icon solid size={18}
+                     onClick={() => {}}
+                     name={'exclamation-circle'}
+                     color={'gray'}/>
 
     return <Icon solid={active} size={18}
                  onClick={onChange}

@@ -26,7 +26,7 @@ export default abstract class Package {
         this.autoMapMethods()
     }
 
-    private async userLoaded(req: Request, res: Response, next: NextFunction) {
+    private async userLoaded (req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers['authorization']
         if (!authHeader) return next()
 
@@ -65,6 +65,7 @@ export default abstract class Package {
 
     protected error (error: string) {
         this.isOk = false
+        this.noError = false
         this.errorText = error
     }
 

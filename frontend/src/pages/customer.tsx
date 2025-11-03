@@ -13,6 +13,7 @@ import { GENDERs, JOBs } from '../variable/customer'
 import { Radio } from '../component/radio'
 import { Select } from '../component/select'
 import Paging, { createPaging } from '../component/paging'
+import { IconActive } from '../component/iconActive'
 
 export default function Customer (props: any) {
 
@@ -50,28 +51,33 @@ export default function Customer (props: any) {
 
         <ListContainer wait={wait}>
             <ListHead>
+                <div className={'w-12 c'}/>
                 <div className={'w-12 c'}>#</div>
                 <div className={'w-full'}>ชื่อสกุล</div>
                 <div className={'w-20 c'}>เพศ</div>
-                <div className={'w-64 c'}>วัน/เดือน/ปีเกิด</div>
+                <div className={'w-36 c'}>วัน/เดือน/ปีเกิด</div>
                 <div className={'w-32 c'}>แก้ไชโดย</div>
-                <div className={'w-64 r'}>อัพเดทล่าสุด</div>
+                <div className={'w-52 r'}>อัพเดทล่าสุด</div>
                 <div className={'w-32'}/>
             </ListHead>
-            <ListBody>
-                {datas.map((d: any, i: number) => {
+            <ListBody scroll>
+                {datas.map((d: any) => {
                     return <List key={'item_' + d.id}>
+                        <div className={'w-12 c'}>
+                            <IconActive active={d.isActive} url={'customer/active?id=' + d.id}/>
+                        </div>
                         <div className={'w-12 c'}>{d._rownum}</div>
                         <div className={'w-full'}>{d.fullname}</div>
                         <div className={'w-20 c'}>{d.gender?.name}</div>
-                        <div className={'w-64 c'}>{date(d.birthday, 'S')}</div>
+                        <div className={'w-36 c'}>{date(d.birthday, 'M')}</div>
                         <div className={'w-32 c'}>{d.updateUser?.name}</div>
-                        <div className={'w-64 r'}>{date(d.updateTime, 'St')}</div>
+                        <div className={'w-52 r'}>{date(d.updateTime, 'Pt')}</div>
                         <div className={'w-32 text-center'}><Button sm success onClick={() => setForm(d.id)}>ตั้งค่า</Button></div>
                     </List>
                 })}
             </ListBody>
         </ListContainer>
+
         <Paging className={'mt-3'} page={paging} onChange={loadList}/>
         <CustomerForm id={form} onSave={loadList} onClose={() => setForm(null)}/>
     </>
