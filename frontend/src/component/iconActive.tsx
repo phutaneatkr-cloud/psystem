@@ -1,5 +1,5 @@
 import { Icon, T_IconName } from './icon'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { clsNames } from '../utlis'
 import { get } from '../service/service'
 
@@ -15,7 +15,7 @@ interface I_IconActiveProps {
 
 export const IconActive = (props: I_IconActiveProps) => {
 
-    const [active, setActive] = useState(props.active || false)
+    const [active, setActive] = useState(false)
     const [activeError, setActiveError] = useState(false)
 
     const onChange = () => {
@@ -29,6 +29,10 @@ export const IconActive = (props: I_IconActiveProps) => {
             })
         }
     }
+
+    useEffect(() => {
+        setActive(props.active || false)
+    }, [props.active])
 
     if (activeError)
         return <Icon solid size={18}

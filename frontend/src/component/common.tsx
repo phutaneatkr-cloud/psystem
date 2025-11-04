@@ -17,6 +17,7 @@ interface I_PageTitleProps {
 
 export const PageTitle = (props: I_PageTitleProps) => {
     return <div className="flex items-center">
+        {props.icon && <Icon className={'mr-1'} name={props.icon} size={24}/>}
         <span className={'w-fit'}>{props.title}</span>
         <div className="ml-3 flex flex-1">
             {props.children}

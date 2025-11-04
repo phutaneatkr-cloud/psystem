@@ -62,30 +62,44 @@ export const Modal = (props: ModalProps) => {
         onAfterOpen={props.onOpenEnd}
         onAfterClose={props.onCloseEnd}
         className={clsNames(
-            `bg-white p-5 rounded-md mx-auto mt-5 shadow-lg transform transition-all duration-100 ease-in-out ${animationClass}`,
+            `bg-white rounded-md mx-auto mt-5 shadow-lg transform transition-all duration-100 ease-in-out overflow-hidden ${animationClass}`,
             !props.sm && !props.md && !props.lg && !props.xl && 'w-4/12',
             props.sm && 'w-3/12',
             props.md && 'w-5/12',
             props.lg && 'w-7/12',
             props.xl && 'w-10/12'
         )}
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 justify-center">
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 justify-center"
+    >
 
-        <div className="flex justify-between items-center border-b pb-2 mb-4">
-            <h2 className="text-xl font-semibold">{props.title}</h2>
-            <Icon name={'x'} className={'text-gray-500 hover:text-black'} button onClick={props.onClose} />
+        <div className="flex justify-between items-center bg-sky-600 border-b border-gray-300 px-5 py-3">
+            <h2 className="text-white text-lg font-semibold">{props.title}</h2>
+            <Icon
+                name={'x'}
+                className={'text-white hover:text-gray-700 transition-colors'}
+                button
+                onClick={props.onClose}
+            />
         </div>
 
-        <div className={'overflow-y-auto scrollable-div p-3'} style={{ maxHeight: 'calc(100vh - 200px)' }}>
+        <div className={'overflow-y-auto scrollable-div p-5'} style={{ maxHeight: 'calc(100vh - 200px)' }}>
             {props.children}
         </div>
 
-        <div className="flex mt-5">
-            {props.footerDrop && <Icon button name={'trash'} className={'hover:text-red-800 text-red-500'} size={18} onClick={props.footerDrop}/>}
-            {props.footer && <div className="">{props.footer}</div>}
+        <div className="flex mt-3 px-5 pb-4">
+            {props.footerDrop && (
+                <Icon
+                    button
+                    name={'trash'}
+                    className={'hover:text-red-800 text-red-500'}
+                    size={18}
+                    onClick={props.footerDrop}
+                />
+            )}
+            {props.footer && <div className={'mt-1.5'}>{props.footer}</div>}
             {props.footerSave && (
                 <div className="ml-auto flex justify-end">
-                    <Button className={'buttonload w-20'} wait={waitSave} primary onClick={saveClick}>
+                    <Button className={'w-20'} wait={waitSave} info onClick={saveClick}>
                         {waitSave ? <i className="fa fa-spinner fa-spin"></i> : 'บันทึก'}
                     </Button>
                 </div>

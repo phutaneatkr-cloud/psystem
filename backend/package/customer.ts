@@ -46,6 +46,7 @@ export default class customer extends Package {
             .set('customer_tel', this.ptext('tel'))
             .set('customer_line', this.ptext('line'))
             .setNumber('customer_job', this.pnum('job'))
+            .setNumber('is_active', this.pnum('isActive'))
             .set('customer_address', this.ptext('address'))
 
         if (id === 0) {

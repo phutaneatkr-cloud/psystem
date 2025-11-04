@@ -9,7 +9,7 @@ import { ICONs } from '../variable/icon'
 export type T_IconName = (typeof ICONs)[number]['name'];
 
 interface I_IconProps {
-    name: T_IconName
+    name: T_IconName | string
     size?: number
     color?: string
     className?: string

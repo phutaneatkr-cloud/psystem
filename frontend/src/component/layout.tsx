@@ -9,6 +9,7 @@ import { Icon } from './icon'
 import React, { useState } from 'react'
 import { UserForm } from '../pages/user'
 import { Modal } from './modal'
+import { dConfirm } from './common'
 
 export default function MainLayout (props: any) {
     const user = useUser()
@@ -33,48 +34,54 @@ export default function MainLayout (props: any) {
     }
 
     const onLogout = async () => {
-        tokenService.clearToken()
-        dispatch(clearUser())
-        navigate('login')
+        dConfirm('ออกจากระบบ ?').then(ok => {
+            if (ok) {
+                tokenService.clearToken()
+                dispatch(clearUser())
+                navigate('login')
+            }
+        })
+
     }
 
-    return <div className="flex h-screen">
-        <div className={clsNames('bg-gray-800 text-white flex flex-col', 'w-64')}>
+    return <div className="flex h-screen bg-sky-100">
+        <div className="flex flex-col w-48 rounded-lg">
 
-            <div className="p-4">
-                <h1 className="text-2xl font-bold">PSYSTEM</h1>
-                {user && <div className="flex items-center gap-2 mt-2">
-                    <h6 className="flex-1 truncate">{user.fullname}</h6>
-                    <Icon className={'cursor-pointer'} name={'settings'} onClick={() => setForm(user.id)}/>
-                </div>}
+            <div className="bg-blue-500 px-3 py-2 text-white flex items-center">
+                <h1 className="text-sm font-bold mr-auto truncate">{user.fullname}</h1>
+
+                <Icon name="settings" size={18} color="white" className="cursor-pointer hover:opacity-80 mr-1" onClick={() => setForm(user.id)}/>
+                <Icon name="logout" size={18} color="white" className="cursor-pointer hover:opacity-80" onClick={onLogout}/>
             </div>
 
-            <div className="flex-1">
+            <div className="bg-blue-400 text-blue-100 text-xs px-3 py-1">v 0.0.1 ~ dev</div>
+
+            <div className="flex-1 mt-2 overflow-y-auto">
                 {MENU_SLIDER
-                    .filter((menu) => menu.role ? (user.role.indexOf(menu.role) >= 0) : true)
-                    .map((menu, index) => {
-                        return <div key={'item_' + menu.name}>
-                            <a
-                                href={menu.path}
-                                onClick={(e) => menuClick(e, menu)}
+                    .filter((menu) => menu.role ? user.role.includes(menu.role) : true)
+                    .map((menu) => {
+                        const active = location.pathname === menu.path
+                        return <a
+                            key={'item_' + menu.name}
+                            href={menu.path}
+                            onClick={(e) => menuClick(e, menu)}
+                            className={clsNames(
+                                'flex items-center gap-2 px-3 py-2 text-sm rounded-sm mx-2 my-0.5 transition-all duration-150',
+                                active
+                                    ? 'bg-blue-500 text-white'
+                                    : 'text-blue-500 hover:bg-sky-100'
+                            )}>
+                            <Icon
+                                name={menu.icon}
+                                size={16}
                                 className={clsNames(
-                                    'block py-2 px-4',
-                                    location.pathname === menu.path ? 'bg-gray-700' : ''
-                                )}>
-                                {menu.name}
-                            </a>
-                        </div>
+                                    active ? 'text-white' : 'text-blue-500'
+                                )}/>
+                            <span className="truncate">{menu.name}</span>
+                        </a>
+
                     })}
             </div>
-
-            <div className="p-4">
-                <a href="#"
-                   onClick={() => onLogout()}
-                   className="block py-2 px-4 hover:bg-red-300 bg-red-500 rounded text-center">
-                    ออกจากระบบ
-                </a>
-            </div>
-
         </div>
 
         <div className="flex flex-1 flex-col h-screen bg-white p-3 overflow-hidden">

@@ -41,7 +41,7 @@ export default function User (props: any) {
     }, [search])
 
     return <>
-        <PageTitle title="ผู้ใช้งาน">
+        <PageTitle icon={'user'} title="ผู้ใช้งาน">
             <InputSearch value={search} onChange={setSearch} onRefresh={() => loadList()}/>
             <Button success className="w-36 ml-3" onClick={() => setForm(0)}>
                 เพิ่มข้อมูลใหม่

@@ -108,7 +108,7 @@ export const InputDate = (props: InputDateProps) => {
                 <select
                     value={currentMonth}
                     onChange={(e) => changeMonth(Number(e.target.value))}
-                    className="text-sm font-semibold bg-transparent border border-gray-300 rounded px-2 py-1 cursor-pointer hover:border-gray-400 focus:outline-none focus:border-blue-300">
+                    className="font-semibold bg-transparent  rounded px-2 py-1 cursor-pointer hover:text-gray-600 focus:outline-none focus:border-blue-300">
                     {months.map((m, i) => (
                         <option className={clsNames(currentMonth === i && 'bg-blue-400 text-white')} key={i} value={i}>{m}</option>
                     ))}
@@ -117,7 +117,7 @@ export const InputDate = (props: InputDateProps) => {
                 <select
                     value={currentYear}
                     onChange={(e) => changeYear(Number(e.target.value) - 543)}
-                    className="text-sm font-semibold bg-transparent border border-gray-300 rounded px-2 py-1 cursor-pointer hover:border-gray-400 focus:outline-none focus:border-blue-300">
+                    className="font-semibold bg-transparent border-gray-300 rounded px-2 py-1 cursor-pointer hover:text-gray-600 focus:outline-none focus:border-blue-300">
                     {years.map((year) => (
                         <option className={clsNames(currentYear === year && 'bg-blue-400 text-white')} key={year} value={year}>{year}</option>
                     ))}
@@ -164,8 +164,7 @@ export const InputDate = (props: InputDateProps) => {
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     placeholder={props.placeholder}
-                    displayValue={selectedDate && formatDateToBuddhistEra(selectedDate)}
-                />
+                    displayValue={selectedDate && formatDateToBuddhistEra(selectedDate)}/>
             }
         />
 

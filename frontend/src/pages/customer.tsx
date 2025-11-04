@@ -14,6 +14,7 @@ import { Radio } from '../component/radio'
 import { Select } from '../component/select'
 import Paging, { createPaging } from '../component/paging'
 import { IconActive } from '../component/iconActive'
+import { Checkbox } from '../component/checkbox'
 
 export default function Customer (props: any) {
 
@@ -42,7 +43,7 @@ export default function Customer (props: any) {
     }, [search])
 
     return <>
-        <PageTitle title="ลูกค้า">
+        <PageTitle icon={'users'} title="ลูกค้า">
             <InputSearch value={search} onChange={setSearch} onRefresh={loadList}/>
             <Button success className="w-36 ml-3" onClick={() => setForm(0)}>
                 เพิ่มข้อมูลใหม่
@@ -51,7 +52,7 @@ export default function Customer (props: any) {
 
         <ListContainer wait={wait}>
             <ListHead>
-                <div className={'w-12 c'}/>
+                <div className={'w-icon c'}/>
                 <div className={'w-12 c'}>#</div>
                 <div className={'w-full'}>ชื่อสกุล</div>
                 <div className={'w-20 c'}>เพศ</div>
@@ -63,7 +64,7 @@ export default function Customer (props: any) {
             <ListBody scroll>
                 {datas.map((d: any) => {
                     return <List key={'item_' + d.id}>
-                        <div className={'w-12 c'}>
+                        <div className={'w-icon c'}>
                             <IconActive active={d.isActive} url={'customer/active?id=' + d.id}/>
                         </div>
                         <div className={'w-12 c'}>{d._rownum}</div>
@@ -108,7 +109,8 @@ function CustomerForm (props: any) {
             tel: data.tel,
             line: data.line,
             job: data.job?.id,
-            address: data.address
+            address: data.address,
+            isActive: data.isActive ? 1 : 0,
         }
 
         post('customer/save', saveData).then((d => {
@@ -148,7 +150,6 @@ function CustomerForm (props: any) {
                   footerDrop={props.id > 0 && deleteData} footerSave={saveData}>
 
         {data && <>
-
             <div className={'flex space-x-2'}>
                 <Input label="ชื่อ" className={'w-1/2'} value={data.name} onChange={name => onChange({ name })}/>
                 <Input label="สกุล" className={'w-1/2'} value={data.lastname} onChange={lastname => onChange({ lastname })}/>
@@ -166,6 +167,8 @@ function CustomerForm (props: any) {
 
             <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={(_, job) => onChange({ job })}/>
             <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/>
+
+            <Checkbox className={'mt-3'} text={'เปิดใช้งาน'} checked={data.isActive} onChange={v => onChange({ isActive: v })}/>
         </>
         }
     </Modal>
