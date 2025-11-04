@@ -91,7 +91,7 @@ export const InputDate = (props: InputDateProps) => {
 
     const timeScale = props.timeScale || 10
 
-    const CustomHeader = ({ date, changeYear, changeMonth, backMonth, nextMonth }: any) => {
+    const CustomHeader = ({ date, changeYear, changeMonth, decreaseMonth, increaseMonth }: any) => {
 
         const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
 
@@ -102,7 +102,7 @@ export const InputDate = (props: InputDateProps) => {
 
         return <div className="flex items-center justify-between gap-2 h-6 px-2 py-1">
 
-            <Icon name="chevron-left" onClick={backMonth}/>
+            <Icon name="chevron-left" className={'hover:text-gray-600 cursor-pointer'} onClick={decreaseMonth}/>
 
             <div className="flex items-center gap-1 flex-1 justify-center">
                 <select
@@ -124,7 +124,7 @@ export const InputDate = (props: InputDateProps) => {
                 </select>
             </div>
 
-            <Icon name="chevron-right" onClick={nextMonth}/>
+            <Icon name="chevron-right" className={'hover:text-gray-600 cursor-pointer'} onClick={increaseMonth}/>
         </div>
     }
 

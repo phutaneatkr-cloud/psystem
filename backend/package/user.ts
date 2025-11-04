@@ -1,7 +1,7 @@
 import Package from '../utlis/package'
 import { db, table } from '../service/database'
 import { UserEntity } from '../entity/user'
-import { generateUserSecret, hashPassword } from '../utlis'
+import { generateUserSecret, hashPassword, signToken } from '../utlis'
 import { UserModel } from '../model/user'
 
 export default class User extends Package {
@@ -31,7 +31,6 @@ export default class User extends Package {
     async save () {
         const id = this.pnum('id')
 
-        const P_isPassword = this.pnum('isPassword') === 1
         const P_password = this.ptext('password')
 
         const db = table('users')
@@ -53,7 +52,7 @@ export default class User extends Package {
                     const password = await hashPassword(P_password)
 
                     db.set('user_password', password)
-                    db.set('user_secret', secret)
+                    db.set('user_secret', process.env.APP_TOKEN_SECRET + secret)
                     db.setNow('create_time')
 
                     const id = await db.insert()
@@ -66,17 +65,28 @@ export default class User extends Package {
                 db.where('user_id', id)
                 db.setNow('update_time')
 
-                if (P_isPassword) {
-                    const secret = generateUserSecret()
-                    const password = await hashPassword(P_password)
-                    db.set('user_password', password)
-                    db.set('user_secret', secret)
+                const output: Record<string, number | string> = { id }
+
+                if (P_password) {
+                    const o = new UserModel()
+                    const data: UserEntity = await o.getById(id)
+                    if (data) {
+                        const secret = generateUserSecret()
+                        const password = await hashPassword(P_password)
+
+                        if (this.user!.id === data!.id) {
+                            output.token = signToken(data.username, process.env.APP_TOKEN_SECRET + secret)
+                        }
+
+                        db.set('user_password', password)
+                        db.set('user_secret', secret)
+                    }
                 }
 
                 await db.update()
 
                 this.ok()
-                return { id }
+                return output
             }
         }
     }

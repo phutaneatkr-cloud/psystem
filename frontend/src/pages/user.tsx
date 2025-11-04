@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { get, post } from '../service/service'
+import { get, post, tokenService } from '../service/service'
 import { Button } from '../component/button'
 import { dConfirm, PageTitle, tError, tSuccess } from '../component/common'
 import { Input, InputSearch } from '../component/input'
@@ -12,8 +12,9 @@ import { List, ListBody, ListContainer, ListHead, } from '../component/list'
 
 import Photo from '../component/photo'
 import Paging, { createPaging } from '../component/paging'
-import { Icon } from '../component/icon'
 import { IconActive } from '../component/iconActive'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../service/state'
 
 export default function User (props: any) {
     const [wait, setWait] = useState(true)
@@ -79,8 +80,9 @@ export default function User (props: any) {
 }
 
 export function UserForm (props: any) {
+    const dispatch = useDispatch()
+
     const [data, setData] = useState<any>(null)
-    const [isPassword, setIsPassword] = useState(false)
 
     const loadData = () => {
         if (props.id > 0) {
@@ -106,22 +108,19 @@ export function UserForm (props: any) {
             fullname: data.fullname,
             username: data.username,
             birthday: dbdate(data.birthday),
-            password: '',
-            isPassword: 0,
             photo: data.photo || null,
-
+            password: ''
         }
 
         if (data.username === '') return c(tError('กรุณากรอกชื่อผู้ใช้งาน'))
         if (!validateUsername(data.username)) return c(tError('ชื่อผู้ใช้งานห้าม ห้ามเว้นวรรคและอักขระพิเศษ'))
 
-        const editPass = (props.id > 0 && isPassword) || props.id === 0
+        const editPass = data.password || data.password2
 
         if (editPass) {
-            if (isEmpty(data.password) || isEmpty(data.cpassword)) return c(tError('กรอกรหัสผ่านให้ครบถ้วน'))
-            if (data.password != data.cpassword) return c(tError('รหัสผ่านไม่ตรงกัน !?'))
+            if (isEmpty(data.password) || isEmpty(data.password2)) return c(tError('กรอกรหัสผ่านให้ครบถ้วน'))
+            if (data.password != data.password2) return c(tError('รหัสผ่านไม่ตรงกัน !?'))
             saveData.password = data.password
-            saveData.isPassword = 1
         }
 
         post('user/save', saveData).then(async (d) => {
@@ -129,6 +128,10 @@ export function UserForm (props: any) {
                 tSuccess('บันทึกข้อมูลสำเร็จ')
                 props.onSave()
                 props.onClose()
+
+                if (d.token)
+                    tokenService.setToken(d.token)
+
             }
             else tError(d.error || 'บันทึกข้อมูลไม่สำเร็จ  !?')
         }).finally(c)
@@ -151,30 +154,23 @@ export function UserForm (props: any) {
 
     const onChange = (update: any) => setData((prev: any) => ({ ...prev, ...update }))
 
-    const onClose = () => {
-        setData(null)
-        setIsPassword(false)
-    }
+    const onClose = () => setData(null)
 
     return <Modal title={props.id > 0 ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูลใหม่'} open={props.id !== null} onClose={props.onClose}
                   onOpenEnd={() => loadData()} onCloseEnd={() => onClose()}
-                  footerDrop={props.id > 0 && deleteData} footerSave={saveData}
-                  footer={props.id > 0 && <Button className={'ml-3'} outline={!isPassword} secondary onClick={() => setIsPassword((prev) => !prev)}>ตั้งรหัสผ่าน</Button>}>
+                  footerDrop={props.id > 0 && deleteData} footerSave={saveData}>
 
         {data && <>
             <Photo label={'ภาพโปรไฟล์'} value={data.photo} onChange={photo => onChange({ photo })}/>
-
             <Input form label="ชื่อสกุล" className={'mt-2'} value={data.fullname} onChange={(fullname: any) => onChange({ fullname })}/>
-            <Input label="ชื่อผู้ใช้งาน" className={'mt-2'} value={data.username} onChange={(username: any) => onChange({ username })}/>
-
-            {(props.id === 0 || isPassword) && (
-                <div className={'flex mt-2 gap-2'}>
-                    <Input label="รหัสผ่าน" className={'w-1/2'} type={'password'} value={data.password} onChange={(password: any) => onChange({ password })}/>
-                    <Input label="ยืนยันรหัสผ่าน" className={'w-1/2'} type={'password'} value={data.cpassword} onChange={(cpassword: any) => onChange({ cpassword })}/>
-                </div>
-            )}
-
             <InputDate label="วัน/เดือน/ปีเกิด" className={'mt-3'} value={data.birthday} onChange={(birthday: any) => onChange({ birthday })}/>
+            <Input className={'mt-2'} label="ชื่อผู้ใช้งาน" value={data.username} onChange={(username: any) => onChange({ username })}/>
+
+            <div className={'flex mt-2 gap-2'}>
+                <Input label="รหัสผ่าน" className={'w-1/2'} type={'password'} value={data.password} onChange={(password: any) => onChange({ password })}/>
+                <Input label="ยืนยันรหัสผ่าน" className={'w-1/2'} type={'password'} value={data.password2} onChange={(password2: any) => onChange({ password2 })}/>
+            </div>
+
         </>
         }
     </Modal>

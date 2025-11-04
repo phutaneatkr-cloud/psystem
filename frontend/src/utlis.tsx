@@ -66,6 +66,7 @@ export const todate = (date?: any) => {
 }
 
 export function dbdate (date: any, time = true) {
+    if (isEmpty(date)) return null
     try {
         const f = time ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'
         const _date = typeof date === 'number'

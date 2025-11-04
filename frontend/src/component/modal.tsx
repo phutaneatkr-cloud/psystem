@@ -69,10 +69,9 @@ export const Modal = (props: ModalProps) => {
             props.lg && 'w-7/12',
             props.xl && 'w-10/12'
         )}
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 justify-center"
-    >
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 justify-center">
 
-        <div className="flex justify-between items-center bg-sky-600 border-b border-gray-300 px-5 py-3">
+        <div className="flex justify-between items-center bg-sky-400 border-b border-gray-300 px-5 py-3">
             <h2 className="text-white text-lg font-semibold">{props.title}</h2>
             <Icon
                 name={'x'}

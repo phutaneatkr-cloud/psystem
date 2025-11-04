@@ -17,7 +17,6 @@ export default class App extends Package {
         const raw = await db.selectOnce()
 
         if (raw) {
-            console.log('raw -> ',raw)
             if (num(raw.is_active) === 1) {
                 const next = await verifyPassword(password!, raw.user_password)
                 if (next) {
@@ -58,12 +57,14 @@ export default class App extends Package {
         const raw = await db.selectOnce()
         if (!raw) return { error: 'User not found' }
 
-        const c = verifyToken(token, process.env.APP_TOKEN_SECRET + raw.user_secret)
-        if (!c.ok) return { error: 'Token invalid or expired' }
+        if (num(raw.is_active) === 1) {
+            const c = verifyToken(token, process.env.APP_TOKEN_SECRET + raw.user_secret)
+            if (!c.ok) return { error: 'Token invalid or expired' }
 
-        const user = new UserEntity(raw)
-        this.ok()
-        return { user: user.array(), token }
+            const user = new UserEntity(raw)
+            this.ok()
+            return { user: user.array(), token }
+        }
     }
 
 }

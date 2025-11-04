@@ -31,7 +31,7 @@ const _convColor = (props: any) => {
         if (props.success)
             return "bg-green-500 hover:bg-green-600 text-white border border-green-600";
         if (props.info)
-            return "bg-sky-500 hover:bg-sky-600 text-white border border-sky-600";
+            return "bg-sky-400 hover:bg-sky-600 text-white border border-sky-500";
         if (props.warning)
             return "bg-amber-500 hover:bg-amber-600 text-white border border-amber-600";
         if (props.error)
