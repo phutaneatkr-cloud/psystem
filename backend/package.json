@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "backend": "nodemon index.ts",
+    "backend-prod": "cross-env NODE_ENV=production ts-node index.ts",
     "start": "npm run backend"
   },
   "keywords": [],
@@ -29,6 +30,7 @@
     "@types/mime-types": "3.0.1",
     "@types/multer": "2.0.0",
     "@types/node": "24.7.2",
+    "cross-env": "10.1.0",
     "typescript": "5.9.3"
   }
 }

@@ -16,8 +16,8 @@ const baseConfig: any = {
 }
 
 if (prod) {
-    if (process.env.DB_CA_BASE64) {
-        baseConfig.ssl = { ca: Buffer.from(process.env.DB_CA_BASE64, 'base64').toString('utf8') }
+    if (false && process.env.DB_CA_BASE64) {
+        //baseConfig.ssl = { ca: Buffer.from(process.env.DB_CA_BASE64, 'base64').toString('utf8') }
     }
     else {
         baseConfig.ssl = { ca: fs.readFileSync(path.resolve(__dirname, '../ca.pem')) }

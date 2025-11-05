@@ -9,6 +9,7 @@ import { Input } from '../component/input'
 import { InputDate } from '../component/inputDate'
 import { Radio } from '../component/radio'
 import { Checkbox } from '../component/checkbox'
+import Photo from '../component/photo'
 
 const weather_options = [{ id: 1, name: 'หน้าร้อน' }, { id: 2, name: 'หน้าฝน' }, { id: 3, name: 'หน้าหนาว' }]
 const color_options = ['สีแดง', 'สีเหลือง', 'สีเขียว']
@@ -24,7 +25,8 @@ export function DevPage () {
         checks: [],
         weather: 0,
         job: null,
-        jobs: []
+        jobs: [],
+        photo: null
     })
 
     const onChange = (update: any) => setData((prev: any) => ({ ...prev, ...update }))
@@ -49,7 +51,9 @@ export function DevPage () {
 
         <FormContainer className={'mt-3'}>
 
-            <Input label={'input'} className={'w-1/2'} value={data.name} onChange={name => onChange({ name })}/>
+            <Photo label={'image'} value={data.photo} onChange={photo => onChange({ photo })}/>
+
+            <Input label={'input'} className={'w-1/2 mt-1'} value={data.name} onChange={name => onChange({ name })}/>
             <Input label={'input multiple'} className={'w-1/2 mt-1'} multiple value={data.detail} onChange={detail => onChange({ detail })}/>
 
             <InputDate label={'input date'} className={'w-1/2 mt-1'} value={data.date} onChange={date => onChange({ date })}/>

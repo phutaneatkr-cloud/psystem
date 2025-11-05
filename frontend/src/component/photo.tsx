@@ -21,16 +21,22 @@ export default function Photo (props: PhotoProps) {
         const file = e.target.files?.[0]
         if (!file) return
 
-        setWait(true)
-        await post('app/upload', file).then((d) => {
-            if (d.ok) {
-                props.onChange(d.files[0] || null)
-            }
-            else {
-                props.onChange(null)
-                tError('อัพโหลดไม่สำเร็จ')
-            }
-        }).finally(() => setWait(false))
+        if (!file.type.startsWith('image/')) {
+            tError('อัพโหลดได้แค่ไฟล์รูปภาพเท่านั้น')
+            props.onChange(null)
+        }
+        else {
+            setWait(true)
+            await post('app/upload', file).then((d) => {
+                if (d.ok) {
+                    props.onChange(d.files[0] || null)
+                }
+                else {
+                    props.onChange(null)
+                    tError('อัพโหลดไม่สำเร็จ')
+                }
+            }).finally(() => setWait(false))
+        }
     }
 
     const removePhoto = () => props.onChange(null)
