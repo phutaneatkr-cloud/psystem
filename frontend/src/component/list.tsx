@@ -13,13 +13,13 @@ export function ListContainer (props: { wait?: boolean, children: React.ReactNod
             return <div className="flex flex-col flex-1 overflow-hidden">
                 {props.wait && <Wait/>}
                 <div className="mt-3 border border-b-0">{head}</div>
-                <div className="flex-1 overflow-y-auto border scrollable-div">
+                <div className="flex-1 overflow-y-auto border">
                     {others}
                 </div>
             </div>
         }
     }
-    return <div className="flex flex-col flex-1 overflow-y-auto mt-3 border scrollable-div">
+    return <div className="flex flex-col flex-1 overflow-y-auto mt-3 border">
         {props.wait && <Wait/>}
         {props.children}
     </div>

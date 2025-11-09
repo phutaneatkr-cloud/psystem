@@ -1,22 +1,19 @@
+import { dConfirm, PageTitle, tError, tSuccess } from '../component/common'
 import React, { useEffect, useState } from 'react'
-
+import Paging, { createPaging } from '../component/paging'
 import { date, dbdate, useDebounce } from '../utlis'
 import { get, post } from '../service/service'
-
-import { dConfirm, PageTitle, tError, tSuccess } from '../component/common'
 import { Input, InputSearch } from '../component/input'
 import { Button } from '../component/button'
-import { List, ListBody, ListButton, ListContainer, ListHead } from '../component/list'
-import { Modal } from '../component/modal'
-import { InputDate } from '../component/inputDate'
-import { GENDERs, JOBs } from '../variable/var'
-import { Radio } from '../component/radio'
-import { Select } from '../component/select'
-import Paging, { createPaging } from '../component/paging'
+import { List, ListBody, ListContainer, ListHead } from '../component/list'
 import { IconActive } from '../component/iconActive'
-import { Checkbox } from '../component/checkbox'
+import { GENDERs } from '../variable/var'
+import { Modal } from '../component/modal'
+import { Radio } from '../component/radio'
+import { InputDate } from '../component/inputDate'
+import Photo from '../component/photo'
 
-export default function Customer (props: any) {
+export default function Employee () {
 
     const [wait, setWait] = useState(true)
 
@@ -24,13 +21,14 @@ export default function Customer (props: any) {
     const [form, setForm] = useState<any>(null)
 
     const [search, setSearch] = useState('')
+
     const [paging, setPaging] = useState(createPaging(1))
 
     const loadList = useDebounce((p?: any) => {
         if (!p) p = paging
         setWait(true)
         const params = { search, page: p?.page || 1 }
-        get('customer/list', params).then(d => {
+        get('employee/list', params).then(d => {
             if (d.ok) {
                 setDatas(d.datas)
                 setPaging(d.paging)
@@ -43,54 +41,46 @@ export default function Customer (props: any) {
     }, [search])
 
     return <>
-        <PageTitle icon={'users'} title="ลูกค้า">
-            <InputSearch value={search} onChange={setSearch} onRefresh={loadList}/>
-            <Button success className="w-36 ml-3" onClick={() => setForm(0)}>
-                เพิ่มข้อมูลใหม่
-            </Button>
+        <PageTitle icon={'users-group'} title={'พนักงาน'}>
+            <InputSearch value={search} onChange={setSearch} onRefresh={() => loadList()}/>
+            <Button className={'ml-3 w-36'} success onClick={() => setForm(0)}>เพิ่มข้อมูลพนักงาน</Button>
         </PageTitle>
-
         <ListContainer wait={wait}>
             <ListHead>
-                <div className={'w-icon c'}/>
+                <div className={'w-12 c'}/>
                 <div className={'w-12 c'}>#</div>
-                <div className={'w-full'}>ชื่อสกุล</div>
-                <div className={'w-20 c'}>เพศ</div>
-                <div className={'w-36 c'}>วัน/เดือน/ปีเกิด</div>
-                <div className={'w-32 c'}>แก้ไชโดย</div>
-                <div className={'w-52 r'}>อัพเดทล่าสุด</div>
+                <div className={'w-64'}>พนักงาน</div>
+                <div className={'w-full'}>ตำแหน่ง</div>
+                <div className={'w-date-s r'}>อัพเดทล่าสุด</div>
                 <div className={'w-32'}/>
             </ListHead>
-            <ListBody scroll>
-                {datas.map((d: any) => {
+            <ListBody>
+                {datas.map((d: any, i: number) => {
                     return <List key={'item_' + d.id}>
-                        <div className={'w-icon c'}>
-                            <IconActive active={d.isActive} url={'customer/active?id=' + d.id}/>
+                        <div className={'w-12 c'}>
+                            <IconActive active={d.isActive} url={'employee/active?id=' + d.id}/>
                         </div>
-                        <div className={'w-12 c'}>{d._rownum}</div>
-                        <div className={'w-full'}>{d.fullname}</div>
-                        <div className={'w-20 c'}>{d.gender?.name}</div>
-                        <div className={'w-36 c'}>{date(d.birthday, 'M')}</div>
-                        <div className={'w-32 c'}>{d.updateUser?.name}</div>
-                        <div className={'w-52 r'}>{date(d.updateTime, 'Pt')}</div>
-                        <div className={'w-32 text-center'}><Button sm success onClick={() => setForm(d.id)}>ตั้งค่า</Button></div>
+                        <div className={'w-12 c'}>{i + 1}</div>
+                        <div className={'w-64'}>{d.fullname}</div>
+                        <div className={'w-full'}>{d.position}</div>
+                        <div className={'w-date-s r'}>{date(d.updateTime, 'Mt')}</div>
+                        <div className={'w-32 c'}><Button sm success onClick={() => setForm(d.id)}>ตั้งค่า</Button></div>
                     </List>
                 })}
             </ListBody>
         </ListContainer>
 
         <Paging className={'mt-3'} page={paging} onChange={loadList}/>
-        <CustomerForm id={form} onSave={loadList} onClose={() => setForm(null)}/>
+        <EmployeeForm id={form} onSave={loadList} onClose={() => setForm(null)}/>
     </>
 }
 
-function CustomerForm (props: any) {
+function EmployeeForm (props: any) {
     const [data, setData] = useState<any>(null)
-    const [isPassword, setIsPassword] = useState(false)
 
     const loadData = () => {
         if (props.id > 0) {
-            get('customer/get', { id: props.id }).then(d => {
+            get('employee/get', { id: props.id }).then(d => {
                 if (d.ok) {
                     setData(d.data)
                 }
@@ -104,16 +94,15 @@ function CustomerForm (props: any) {
             id: props.id,
             name: data.name,
             lastname: data.lastname,
+            position: data.position,
             gender: data.gender?.id,
             birthday: dbdate(data.birthday),
             tel: data.tel,
             line: data.line,
-            job: data.job?.id,
+            photo: data.photo || null,
             address: data.address,
-            isActive: data.isActive ? 1 : 0,
         }
-
-        post('customer/save', saveData).then((d => {
+        post('employee/save', saveData).then((d => {
             if (d.ok) {
                 tSuccess('บันทึกข้อมูลสำเร็จ')
                 props.onSave()
@@ -126,7 +115,7 @@ function CustomerForm (props: any) {
     const deleteData = () => {
         dConfirm('ยืนยันการลบข้อมูลนี้ !?').then((ok) => {
             if (ok) {
-                post('customer/delete/' + props.id, null).then((d => {
+                post('employee/delete/' + props.id, null).then((d => {
                     if (d.ok) {
                         tSuccess('ลบข้อมูลสำเร็จ')
                         props.onSave()
@@ -140,35 +129,33 @@ function CustomerForm (props: any) {
 
     const onChange = (update: any) => setData((prev: any) => ({ ...prev, ...update }))
 
-    const onClose = () => {
-        setData(null)
-        setIsPassword(false)
-    }
+    const onClose = () => setData(null)
 
     return <Modal title={props.id > 0 ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูลใหม่'} open={props.id !== null} onClose={props.onClose}
                   onOpenEnd={() => loadData()} onCloseEnd={() => onClose()}
                   footerDrop={props.id > 0 && deleteData} footerSave={saveData}>
 
         {data && <>
-            <div className={'flex space-x-2'}>
+            <Photo label={'ภาพโปรไฟล์'} value={data.photo} onChange={photo => onChange({ photo })}/>
+
+            <div className={'flex gap-2 mt-3'}>
                 <Input label="ชื่อ" className={'w-1/2'} value={data.name} onChange={name => onChange({ name })}/>
                 <Input label="สกุล" className={'w-1/2'} value={data.lastname} onChange={lastname => onChange({ lastname })}/>
             </div>
 
-            <div className={'flex space-x-2 mt-3'}>
+            <Input label="ตำแหน่งงาน" className={'mt-2'} value={data.position} onChange={position => onChange({ position })}/>
+
+            <div className={'flex gap-2 mt-3'}>
                 <Radio label={'เพศ'} className={'w-1/2'} value={data.gender?.id} options={GENDERs} onChange={(_, gender) => onChange({ gender })}/>
                 <InputDate label="วัน/เดือน/ปีเกิด" className={'w-1/2'} value={data.birthday} onChange={birthday => onChange({ birthday })}/>
             </div>
 
-            <div className={'flex space-x-2 mt-3'}>
+            <div className={'flex gap-2 mt-3'}>
                 <Input label="เบอร์โทร" className={'w-1/2'} value={data.tel} onChange={tel => onChange({ tel })}/>
                 <Input label="ไลน์" className={'w-1/2'} value={data.line} onChange={line => onChange({ line })}/>
             </div>
 
-            <Select label={'อาชีพ'} className={'mt-3'} value={data.job} options={JOBs} onChange={(_, job) => onChange({ job })}/>
             <Input label="ที่อยู่" className={'mt-2'} multiple value={data.address} onChange={address => onChange({ address })}/>
-
-            <Checkbox className={'mt-3'} text={'เปิดใช้งาน'} checked={data.isActive} onChange={v => onChange({ isActive: v })}/>
         </>
         }
     </Modal>

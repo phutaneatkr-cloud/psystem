@@ -74,7 +74,7 @@ export const Input = (props: InputProps) => {
                 onFocus={handleFocus}
                 onChange={(e) => props.onChange?.(e.target.value)}
                 onBlur={handleBlurTextArea}
-                className={clsNames(props.className, 'scrollable-div border border-gray-300 text-sm rounded p-2 w-full focus:outline-blue-500')}/> :
+                className={clsNames(props.className, 'border border-gray-300 text-sm rounded p-2 w-full focus:outline-blue-500')}/> :
             <input
                 placeholder={props.placeholder || undefined}
                 value={props.value}

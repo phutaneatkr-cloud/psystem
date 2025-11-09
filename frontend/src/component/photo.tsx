@@ -42,7 +42,7 @@ export default function Photo (props: PhotoProps) {
     const removePhoto = () => props.onChange(null)
 
     return (
-        <div className="mr-auto p-2 bg-white shadow-lg rounded-lg w-40">
+        <div className="mr-auto p-2 bg-white shadow rounded-lg w-40">
             {!props.value ? <label className="block border-2 border-dashed border-gray-300 rounded-lg p-5 text-center cursor-pointer hover:border-blue-400 transition">
                     <input type="file" accept="image/*" className="hidden" onChange={onChangePhoto}/>
                     {wait ? (

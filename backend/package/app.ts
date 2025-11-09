@@ -11,7 +11,7 @@ export default class App extends Package {
         const username = this._username
         const password = this._password
 
-        const db = table('users')
+        const db = table('user')
         db.where('user_username', username)
 
         const raw = await db.selectOnce()
@@ -52,7 +52,7 @@ export default class App extends Package {
         const username = decoded?.username
         if (!username) return { error: 'Invalid token payload' }
 
-        const db = table('users')
+        const db = table('user')
         db.where('user_username', username)
         const raw = await db.selectOnce()
         if (!raw) return { error: 'User not found' }

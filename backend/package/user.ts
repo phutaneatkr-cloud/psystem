@@ -1,5 +1,5 @@
 import Package from '../utlis/package'
-import { db, table } from '../service/database'
+import { table } from '../service/database'
 import { UserEntity } from '../entity/user'
 import { generateUserSecret, hashPassword, signToken } from '../utlis'
 import { UserModel } from '../model/user'
@@ -33,13 +33,12 @@ export default class User extends Package {
 
         const P_password = this.ptext('password')
 
-        const db = table('users')
-        db.set('user_fullname', this.ptext('fullname'))
-        db.set('user_username', this.ptext('username'))
-        db.setJson('user_photo', this.p('photo'))
-        db.setJson('attach_files', this.p('files'))
-        db.setDate('user_birthday', this.ptext('birthday'))
-        db.setNow('update_time')
+        const db = table('user')
+            .set('user_username', this.ptext('username'))
+            .setDate('user_birthday', this.ptext('birthday'))
+            .setNow('update_time')
+            .setNumber('emp_id', this.pnum('employee'))
+            .setJson('user_role', this.p('role'))
 
         const c = await this._checkDuplicate()
         if (!c) return this.error('มีชื่อผู้ใช้งานนี้แล้วในระบบ !?')
@@ -95,7 +94,7 @@ export default class User extends Package {
         const id = this.pnum('id')
         const username = this.ptext('username')
         if (username) {
-            const db = table('users')
+            const db = table('user')
             db.where('user_id', id, '!=')
             db.where('user_username', username)
             return await db.select().then((raws) => raws.length === 0)
@@ -106,7 +105,7 @@ export default class User extends Package {
     async delete () {
         const P_id = this.pnum('id')
 
-        const db = table('users')
+        const db = table('user')
         db.setNumber('is_drop', 1)
         db.setNow('update_time')
         db.where('user_id', P_id)
@@ -120,7 +119,7 @@ export default class User extends Package {
         const o = new UserModel()
         const data: UserEntity = await o.getById(this.pnum('id'))
         if (data) {
-            await table('users')
+            await table('user')
                 .setNow('update_time')
                 .setNumber('is_active', data.isActive ? 0 : 1)
                 .where('user_id', data.id)
@@ -130,4 +129,5 @@ export default class User extends Package {
             return { active: !data.isActive }
         }
     }
+
 }

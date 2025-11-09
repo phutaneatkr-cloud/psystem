@@ -4,7 +4,7 @@ import { Button } from '../component/button'
 import { FormContainer } from '../component/form'
 import { Icon } from '../component/icon'
 import { Select } from '../component/select'
-import { JOBs } from '../variable/customer'
+import { JOBs } from '../variable/var'
 import { Input } from '../component/input'
 import { InputDate } from '../component/inputDate'
 import { Radio } from '../component/radio'
@@ -25,7 +25,7 @@ export function DevPage () {
         checks: [],
         weather: 0,
         job: null,
-        jobs: [],
+        job2: null,
         photo: null
     })
 
@@ -45,28 +45,30 @@ export function DevPage () {
             </div>
         </FormContainer>
 
-        <FormContainer className={'mt-3'}>
-            <Icon size={20} button name={'123'}/>
-        </FormContainer>
+        <div className={'flex gap-2 mt-3'}>
 
-        <FormContainer className={'mt-3'}>
+            <div className={'w-1/2 border-2 border-dashed p-2'}>
+                <Photo label={'image'} value={data.photo} onChange={photo => onChange({ photo })}/>
 
-            <Photo label={'image'} value={data.photo} onChange={photo => onChange({ photo })}/>
+                <Input label={'input'} className={'mt-1'} value={data.name} onChange={name => onChange({ name })}/>
+                <Input label={'input multiple'} className={'mt-1'} multiple value={data.detail} onChange={detail => onChange({ detail })}/>
 
-            <Input label={'input'} className={'w-1/2 mt-1'} value={data.name} onChange={name => onChange({ name })}/>
-            <Input label={'input multiple'} className={'w-1/2 mt-1'} multiple value={data.detail} onChange={detail => onChange({ detail })}/>
+                <InputDate label={'input date'} className={'mt-1'} value={data.date} onChange={date => onChange({ date })}/>
+                <InputDate time label={'input datetime'} className={'mt-2'} value={data.datetime} onChange={datetime => onChange({ datetime })}/>
 
-            <InputDate label={'input date'} className={'w-1/2 mt-1'} value={data.date} onChange={date => onChange({ date })}/>
-            <InputDate time label={'input datetime'} className={'w-1/2 mt-2'} value={data.datetime} onChange={datetime => onChange({ datetime })}/>
+                <Checkbox label={'สถานะ'} className={'mt-2'} text={'สถานะการใช้งาน'} checked={data.check} onChange={v => onChange({ check: v })}/>
+                <Checkbox label={'สีที่ชอบ'} className={'mt-2'} items={color_options} checked={data.checks} onChange={v => onChange({ checks: v })}/>
 
-            <Checkbox label={'สถานะ'} className={'mt-2'} text={'สถานะการใช้งาน'} checked={data.check} onChange={v => onChange({ check: v })}/>
-            <Checkbox label={'สีที่ชอบ'} className={'mt-2'} items={color_options} checked={data.checks} onChange={v => onChange({ checks: v })}/>
+                <Radio label={'อากาศ'} className={'mt-1'} options={weather_options} value={data.weather} onChange={weather => onChange({ weather })}/>
+            </div>
 
-            <Radio label={'อากาศ'} className={'mt-1'} options={weather_options} value={data.weather} onChange={weather => onChange({ weather })}/>
+            <div className={'w-1/2 border-2 border-dashed p-2'}>
+                <Select className={'mt-2'} label={'select'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
+                <Select className={'mt-2'} label={'select url'} value={data.job2} url={'ac/employee'} onChange={(_, job2) => onChange({ job2 })}/>
+            </div>
 
-            <Select className={'w-1/2 mt-2'} label={'select'} value={data.job} options={JOBs} onChange={job => onChange({ job })}/>
 
-        </FormContainer>
+        </div>
 
     </div>
 

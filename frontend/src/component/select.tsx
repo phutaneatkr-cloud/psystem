@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 
 import { clsNames, isEmpty } from '../utlis'
 import { Icon } from './icon'
+import { get } from '../service/service'
 
 interface SelectProps {
     label?: string;
@@ -13,20 +14,21 @@ interface SelectProps {
     sm?: boolean;
     noClear?: boolean;
     note?: string;
-    options: any[],
+    url?: string;
+    options?: any[],
     onChange: (v: any, values?: any) => void;
 }
 
 export const Select = (props: SelectProps) => {
     const [onFocus, setOnFocus] = useState(false)
     const [onOpen, setOnOpen] = useState(false)
-
     const [search, setSearch] = useState('')
-
     const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 })
 
     const dropdownRef: any = useRef(null)
     const selectRef: any = useRef(null)
+
+    const [remoteOptions, setRemoteOptions] = useState<any[]>([])
 
     const onClear = () => {
         props.onChange(null)
@@ -34,22 +36,37 @@ export const Select = (props: SelectProps) => {
     }
 
     const onChange = (id: any) => {
-        const value = props.options.find((d) => d.id.toString() === id.toString())
+        const value = (props.url ? remoteOptions : props.options)?.find((d) => d.id.toString() === id.toString())
         props.onChange(id, value)
         setOnFocus(false)
         setOnOpen(false)
         setSearch('')
     }
 
+    useEffect(() => {
+        if (!props.url) return
+        if (!onOpen) return
+
+        let ignore = false
+        get(props.url, { search }).then((d) => {
+            if (!ignore && d.ok) {
+                setRemoteOptions(d.datas || [])
+            }
+        })
+        return () => { ignore = true }
+    }, [props.url, search, onOpen])
+
     const { vId, vName } = useMemo(() => {
         let output = { vId: '', vName: '' }
+
         if (!isEmpty(props.value)) {
             if (typeof props.value === 'object') {
                 output.vName = props.value?.name || props.value?.text || ''
                 output.vId = props.value?.id || ''
             }
             else {
-                const v = props.options.find(
+                const list = props.url ? remoteOptions : props.options
+                const v = list?.find(
                     (d) => d.id.toString() === (props.value || '').toString()
                 )
                 if (v) {
@@ -58,15 +75,24 @@ export const Select = (props: SelectProps) => {
                 }
             }
         }
-        if (onFocus) output.vName = search
+
+        if (onFocus && search) {
+            output.vName = search
+        }
+
         return output
-    }, [props.value, search])
+    }, [props.value, search, remoteOptions])
 
     const options = useMemo(() => {
-        let os = props.options
-        if (search) os = os.filter((d) => (d.name || d.text).includes(search))
-        return os
-    }, [props.options, props.multiple, props.value, search])
+        if (props.url) {
+            return remoteOptions
+        }
+        else {
+            let os = props.options || []
+            if (search) os = os.filter((d) => (d.name || d.text).includes(search))
+            return os
+        }
+    }, [props.options, props.url, remoteOptions, search])
 
     const handleToggle = () => {
         if (!onOpen && selectRef.current) {
@@ -99,32 +125,47 @@ export const Select = (props: SelectProps) => {
         }
     }, [])
 
+    useEffect(() => {
+        if (onFocus && search === '' && !isEmpty(props.value)) {
+            //props.onChange(null)
+        }
+    }, [search, onFocus])
+
     const dropdownRender = <div
         ref={dropdownRef}
-        className={clsNames('z-[9999] fixed flex flex-col max-h-56 overflow-y-auto border border-gray-300 rounded bg-white shadow-lg scrollable-div', props.className)}
+        className={clsNames(
+            'z-[9999] fixed flex flex-col max-h-56 mt-2 overflow-y-auto border border-gray-300 rounded bg-white shadow-lg',
+            props.className
+        )}
         style={{ top: coords.top, left: coords.left, width: coords.width }}>
-
-        {options.length > 0 ? options.map((d, i: number) => <div
-            key={'item_' + i}
-            className={clsNames(
-                'text-sm p-2 cursor-pointer hover:bg-blue-100',
-                vId && vId === d.id && 'bg-blue-200'
-            )}
-            onClick={() => onChange(d.id)}>
-            {d.name}
-        </div>) : <div
-            className={'text-sm text-gray-300 p-2'}>
-            ไม่พบข้อมูล...
-            </div>}
+        {options.length > 0 ? (
+            options.map((d, i: number) => <div
+                    key={'item_' + i}
+                    className={clsNames(
+                        'text-sm p-2 cursor-pointer hover:bg-blue-100',
+                        vId && vId === d.id && 'bg-blue-200')}
+                    onClick={() => onChange(d.id)}>
+                    {d.name}
+                </div>
+            )
+        ) : <div className={'text-sm text-gray-300 p-2'}>ไม่พบข้อมูล...</div>
+        }
     </div>
 
     return <div className={clsNames('relative', props.className)}>
-        <div ref={selectRef}
-             className={clsNames('border border-gray-300 rounded bg-white focus-within:ring-2 focus-within:ring-blue-500 w-full', props.className)}>
-            <label className={clsNames(
-                onFocus || props.value ? '-translate-y-4 text-xs' : 'text-sm',
-                'absolute left-2 top-2 bg-white text-gray-500 transition-all duration-300 pointer-events-none'
+        <div
+            ref={selectRef}
+            className={clsNames(
+                'border border-gray-300 rounded bg-white focus-within:ring-2 focus-within:ring-blue-500 w-full',
+                props.className
             )}>
+            <label
+                className={clsNames(
+                    onFocus || props.value
+                        ? '-translate-y-4 text-xs'
+                        : 'text-sm',
+                    'absolute left-2 top-2 bg-white text-gray-500 transition-all duration-300 pointer-events-none'
+                )}>
                 {props.label}
             </label>
 
@@ -135,19 +176,27 @@ export const Select = (props: SelectProps) => {
                 onClick={handleToggle}
                 className="text-ellipsis text-sm w-full p-2 rounded border-none outline-none focus:ring-0 pr-1"/>
 
+            {!props.noClear && vId && (
+                <Icon
+                    name="x"
+                    className={clsNames(
+                        'absolute right-1.5 top-1/2 -translate-y-1/2',
+                        'cursor-pointer text-gray-400 hover:text-gray-600'
+                    )}
+                    onClick={() => onClear()}
+                />
+            )}
 
-            {!props.noClear && vId && <Icon name="x" className={clsNames(
-                'absolute right-1.5 top-1/2 -translate-y-1/2',
-                'cursor-pointer text-gray-400 hover:text-gray-600'
-            )} onClick={() => onClear()}
-            />}
-
-            {!onFocus && !onOpen && !vId && <Icon name="chevron-down" className={clsNames(
-                'absolute right-1.5 top-1/2 -translate-y-1/2',
-                'cursor-pointer text-gray-400 hover:text-gray-600'
-            )} onClick={() => setOnOpen((prev: any) => !prev)}
-            />}
-
+            {!onFocus && !onOpen && !vId && (
+                <Icon
+                    name="chevron-down"
+                    className={clsNames(
+                        'absolute right-1.5 top-1/2 -translate-y-1/2',
+                        'cursor-pointer text-gray-400 hover:text-gray-600'
+                    )}
+                    onClick={() => setOnOpen((prev: any) => !prev)}
+                />
+            )}
         </div>
 
         {onOpen && ReactDOM.createPortal(dropdownRender, document.body)}

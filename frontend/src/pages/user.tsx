@@ -9,12 +9,12 @@ import { InputDate } from '../component/inputDate'
 
 import { date, dbdate, isEmpty, useDebounce } from '../utlis'
 import { List, ListBody, ListContainer, ListHead, } from '../component/list'
-
-import Photo from '../component/photo'
 import Paging, { createPaging } from '../component/paging'
 import { IconActive } from '../component/iconActive'
 import { useDispatch } from 'react-redux'
-import { setUser } from '../service/state'
+import { Select } from '../component/select'
+import { Checkbox } from '../component/checkbox'
+import { USER_ROLEs } from '../variable/var'
 
 export default function User (props: any) {
     const [wait, setWait] = useState(true)
@@ -54,7 +54,8 @@ export default function User (props: any) {
                 <div className={'w-12 c'}/>
                 <div className={'w-12 c'}>#</div>
                 <div className={'w-64'}>ชื่อผู้ใช้งาน</div>
-                <div className={'w-full'}>ชื่อสกุล</div>
+                <div className={'w-64'}>พนักงาน</div>
+                <div className={'w-full'}>สิทธิ์ใช้งาน</div>
                 <div className={'w-date-st r'}>อัพเดทล่าสุด</div>
                 <div className={'w-32'}/>
             </ListHead>
@@ -66,8 +67,13 @@ export default function User (props: any) {
                         </div>
                         <div className={'w-12 c'}>{i + 1}</div>
                         <div className={'w-64'}>{d.username}</div>
-                        <div className={'w-full'}>{d.fullname}</div>
-                        <div className={'w-date-st r'}>{date(d.updateTime, 'St')}</div>
+                        <div className={'w-64'}>{d.employee?.name}</div>
+                        <div className={'w-full'}>
+                            {d.role.map((r: string) => {
+                                return USER_ROLEs.find(role => role.id === r)?.name
+                            }).join(', ')}
+                        </div>
+                        <div className={'w-date-st r'}>{date(d.updateTime, 'Mt')}</div>
                         <div className={'w-32 c'}><Button sm success onClick={() => setForm(d.id)}>ตั้งค่า</Button></div>
                     </List>
                 })}
@@ -105,13 +111,13 @@ export function UserForm (props: any) {
     const saveData = (c: any) => {
         const saveData = {
             id: props.id || 0,
-            fullname: data.fullname,
             username: data.username,
             birthday: dbdate(data.birthday),
             photo: data.photo || null,
+            employee: data.employee?.id || 0,
+            role: data.role,
             password: ''
         }
-
         if (data.username === '') return c(tError('กรุณากรอกชื่อผู้ใช้งาน'))
         if (!validateUsername(data.username)) return c(tError('ชื่อผู้ใช้งานห้าม ห้ามเว้นวรรคและอักขระพิเศษ'))
 
@@ -161,16 +167,18 @@ export function UserForm (props: any) {
                   footerDrop={props.id > 0 && deleteData} footerSave={saveData}>
 
         {data && <>
-            <Photo label={'ภาพโปรไฟล์'} value={data.photo} onChange={photo => onChange({ photo })}/>
-            <Input form label="ชื่อสกุล" className={'mt-2'} value={data.fullname} onChange={(fullname: any) => onChange({ fullname })}/>
-            <InputDate label="วัน/เดือน/ปีเกิด" className={'mt-3'} value={data.birthday} onChange={(birthday: any) => onChange({ birthday })}/>
             <Input className={'mt-2'} label="ชื่อผู้ใช้งาน" value={data.username} onChange={(username: any) => onChange({ username })}/>
+            <InputDate label="วัน/เดือน/ปีเกิด" className={'mt-3'} value={data.birthday} onChange={(birthday: any) => onChange({ birthday })}/>
 
             <div className={'flex mt-2 gap-2'}>
                 <Input label="รหัสผ่าน" className={'w-1/2'} type={'password'} value={data.password} onChange={(password: any) => onChange({ password })}/>
                 <Input label="ยืนยันรหัสผ่าน" className={'w-1/2'} type={'password'} value={data.password2} onChange={(password2: any) => onChange({ password2 })}/>
             </div>
 
+            <hr className={'my-3 border-t-2 border-dashed'}/>
+
+            <Select label={'พนักงาน'} url={'ac/employee'} value={data.employee} onChange={(_, employee) => onChange({ employee })}/>
+            <Checkbox label={'สิทธิ์การใช้งาน'} className={'mt-3'} vertical items={USER_ROLEs} checked={data.role} onChange={role => onChange({ role })}/>
         </>
         }
     </Modal>

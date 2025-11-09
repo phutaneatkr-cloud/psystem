@@ -70,7 +70,8 @@ export const Checkbox = (props: I_CheckboxProps) => {
                     }
                 }
 
-                return <div className={clsNames('flex', props.vertical ? 'flex-col' : 'space-x-2')}>
+                return <div
+                    className={clsNames('flex', props.vertical ? 'flex-col space-y-1' : 'flex-wrap gap-2')}>
                     {items.map((item, i) => {
                         const v = datas.indexOf(String(item.id)) >= 0
                         return <div
@@ -80,9 +81,10 @@ export const Checkbox = (props: I_CheckboxProps) => {
                             <input
                                 type="checkbox"
                                 checked={v}
-                                onChange={() => {}}
+                                readOnly
                                 style={{ width: 15, height: 15 }}
-                                className="mr-2 accent-blue-500 cursor-pointer"/>
+                                className="mr-2 accent-blue-500 cursor-pointer"
+                            />
                             <div className="text-sm">{item?.name}</div>
                         </div>
 
@@ -93,7 +95,7 @@ export const Checkbox = (props: I_CheckboxProps) => {
                 const v = typeof props.checked === 'boolean' ? props.checked : props.checked === 1
                 return <div className={'flex w-full cursor-pointer hover:text-blue-300'}
                             onClick={() => props.onChange(!v, [])}>
-                    <input style={{ width: 15, height: 15 }} className={'my-auto'} type={'checkbox'} checked={v}/>
+                    <input style={{ width: 15, height: 15 }} readOnly className={'my-auto'} type={'checkbox'} checked={v}/>
                     <div className={'text-sm ml-2'}>{props.text}</div>
                 </div>
             }

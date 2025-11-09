@@ -7,18 +7,21 @@ import Home from '../pages/home'
 import User from '../pages/user'
 import Customer from '../pages/customer'
 import { DevPage } from '../pages/dev'
+import Employee from '../pages/employee'
 
 export default function PRouter () {
     return (
         <Routes>
             <Route path="/" element={<Navigate to="/home"/>}/>
-            <Route path="/dev" element={<DevPage/>}/>
+            <Route path="/dev" element={<RouteNonUser children={<DevPage/>}/>}/>
 
             <Route path="/login" element={<RouteNonUser children={<Login/>}/>}/>
-
             <Route path="/home" element={<RoutePrivate children={<Home/>}/>}/>
+
             <Route path="/user" element={<RoutePrivate children={<User/>}/>}/>
-            <Route path="/customer" element={<RoutePrivate children={<Customer/>}/>}/>
+            <Route path="/employee" element={<RoutePrivate children={<Employee/>}/>}/>
+
+            {/*<Route path="/customer" element={<RoutePrivate children={<Customer/>}/>}/>*/}
         </Routes>
     )
 }

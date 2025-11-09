@@ -43,7 +43,7 @@ export default abstract class Package {
                 const username = decoded?.username
                 if (!username) return next()
 
-                const db = table('users')
+                const db = table('user')
                 db.where('is_drop', 0)
                 db.where('user_username', username)
                 const raw = await db.selectOnce()
