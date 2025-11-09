@@ -82,7 +82,7 @@ export const Checkbox = (props: I_CheckboxProps) => {
                                 type="checkbox"
                                 checked={v}
                                 readOnly
-                                style={{ width: 15, height: 15 }}
+                                style={{ width: 18, height: 18 }}
                                 className="mr-2 accent-blue-500 cursor-pointer"
                             />
                             <div className="text-sm">{item?.name}</div>
@@ -95,7 +95,7 @@ export const Checkbox = (props: I_CheckboxProps) => {
                 const v = typeof props.checked === 'boolean' ? props.checked : props.checked === 1
                 return <div className={'flex w-full cursor-pointer hover:text-blue-300'}
                             onClick={() => props.onChange(!v, [])}>
-                    <input style={{ width: 15, height: 15 }} readOnly className={'my-auto'} type={'checkbox'} checked={v}/>
+                    <input style={{ width: 18, height: 18 }} readOnly className={'my-auto'} type={'checkbox'} checked={v}/>
                     <div className={'text-sm ml-2'}>{props.text}</div>
                 </div>
             }

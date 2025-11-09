@@ -17,3 +17,12 @@ export const JOBs = [
     { id: 10, name: 'พนักงานรัฐวิสาหกิจ' },
     { id: 11, name: 'อื่นๆ' },
 ]
+
+export const USER_ROLEs = [
+    { id: 'admin', name: 'ผู้ดูแล' },
+    { id: 'manage.employee', name: 'ตั้งค่าพนักงาน' },
+    { id: 'manage.fire.type', name: 'ตั้งค่าประเภท' },
+    { id: 'manage.fire', name: 'ตั้งค่าถังดับเพลิง' },
+    { id: 'manage.fire.save', name: 'บันทึกข้อมูลถังดับเพลิง' },
+    { id: 'report', name: 'รายงาน' },
+]
